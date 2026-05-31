@@ -181,7 +181,7 @@
       </div>
       <div class="field">
         <label>Pick a Color</label>
-        <input type="color" id="color-pick" value="#7b7bff" oninput="updateColor(this.value)" style="width:100%;height:50px;padding:4px;border-radius:10px;border:1px solid var(--border);background:var(--bg3);cursor:pointer">
+        <input type="color" id="color-pick" value="#7b7bff" oninput="updateColor(this.value)" style="width:100%;height:50px;padding:4px;border-radius:10px;border:1px solid var(--border);">
       </div>
       <div class="color-preview" id="color-prev" style="background:#7b7bff"></div>
       <div class="color-formats">
@@ -393,7 +393,7 @@
       <h3 style="font-size:1rem; color:var(--accent); margin-bottom:10px; border-bottom:1px solid var(--border); padding-bottom:5px;">الشخصيات الرئيسية</h3>
       <div id="jojo-chars" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px; margin-bottom: 20px;"></div>
 
-      <h3 style="font-size:0.9rem; color:var(--accent2); margin-bottom:10px; border-bottom:1px solid var(--border); padding-bottom:5px;">الشخصيات الجانبية (الأشرار الثانويين، إلخ)</h3>
+      <h3 style="font-size:0.9rem; color:var(--accent2); margin-bottom:10px; border-bottom:1px solid var(--border); padding-bottom:5px;">الشخصيات الجانبية</h3>
       <div id="jojo-side-chars" style="display:flex; flex-direction:column; gap:8px;"></div>
     </div>
 
@@ -424,7 +424,10 @@
       </div>
     </div>
 
-  </div> </div> <div class="player-wrap" id="player-wrap">
+  </div> 
+</div> 
+
+<div class="player-wrap" id="player-wrap">
   <button class="player-pill" id="player-pill" onclick="togglePlayer()" title="Open music player">
     <span id="pill-eq" class="pill-eq"><span class="eq-dot"></span><span class="eq-dot"></span><span class="eq-dot"></span></span>
     <span id="pill-label">♫ LOFI</span>
@@ -451,7 +454,7 @@
     <div id="spoiler-warning" class="spoiler-screen">
       <div style="font-size: 3rem; margin-bottom: 10px;">⚠️</div>
       <h2 style="color: var(--danger); margin-bottom: 10px;">تحذير: قد يحتوي على حرق!</h2>
-      <p style="color: var(--muted); margin-bottom: 20px; font-size: 0.9rem; text-align: center;">القصة أو الوصف المكتوب هنا قد يحرق عليك أحداث الأنمي. هل أنت متأكد أنك تريد المتابعة؟</p>
+      <p style="color: var(--muted); margin-bottom: 20px; font-size: 0.9rem; text-align: center;">القصة أو الوصف المكتوب هنا قد يحرق عليك أحداث الأنمي.</p>
       <div style="display: flex; gap: 10px;">
         <button class="btn danger" onclick="acceptSpoiler()">متابعة على مسؤوليتي</button>
         <button class="btn secondary" onclick="closeJojoModal()">إلغاء وإغلاق</button>
@@ -639,7 +642,7 @@ function calcDisplay() { document.getElementById('calc-val').textContent = calcS
 function calcNum(n) { if (calcState.reset) { calcState.val = n; calcState.reset = false; } else { calcState.val = calcState.val === '0' ? n : calcState.val + n; } calcDisplay(); }
 function calcDot() { if (calcState.reset) { calcState.val = '0.'; calcState.reset = false; } else if (!calcState.val.includes('.')) calcState.val += '.'; calcDisplay(); }
 function calcOp(op) { if (calcState.op && !calcState.reset) calcEq(true); calcState.prev = parseFloat(calcState.val); calcState.op = op; calcState.expr = calcState.val + ' ' + op; calcState.reset = true; calcDisplay(); }
-function calcEq(chain=false) { if (!calcState.op) return; const a = calcState.prev, b = parseFloat(calcState.val); let r; if (calcState.op === '+') r = a + b; else if (calcState.op === '−') r = a - b; else if (calcState.op === '×') r = a * b; else if (calcState.op === '÷') r = b === 0 ? 'Error' : a / b; if (!chain) { calcState.expr = ''; calcState.op = null; } calcState.val = typeof r === 'number' ? parseFloat(r.toFixed(10)).toString() : r; calcState.reset = true; calcDisplay(); }
+function calcEq(chain=false) { if (!calcState.op) return; const a = calcState.prev, b = parseFloat(calcState.val); let r; if (calcState.op === '+') r = a + b; else if (calcState.op === '−') r = a - b; else if (calcState.op === '×') r = a * b; else if (calcState.op === '÷') r = a / b; calcState.val = r.toString(); calcState.op = null; if (!chain) calcState.reset = true; calcDisplay(); }
 function calcClear() { calcState = { expr: '', val: '0', op: null, prev: null, reset: false }; calcDisplay(); }
 function calcPlusMinus() { calcState.val = (parseFloat(calcState.val) * -1).toString(); calcDisplay(); }
 function calcPercent() { calcState.val = (parseFloat(calcState.val) / 100).toString(); calcDisplay(); }
@@ -654,7 +657,7 @@ function genPass() {
   const len = parseInt(document.getElementById('pass-len').value); let pass = '';
   for (let i = 0; i < len; i++) pass += chars[Math.floor(Math.random() * chars.length)];
   document.getElementById('pass-out').textContent = pass;
-  let strength = 0; if (document.getElementById('p-upper').checked) strength++; if (document.getElementById('p-lower').checked) strength++; if (document.getElementById('p-num').checked) strength++; if (document.getElementById('p-sym').checked) strength++; if (len >= 16) strength++;
+  let strength = 0; if (document.getElementById('p-upper').checked) strength++; if (document.getElementById('p-lower').checked) strength++; if (document.getElementById('p-num').checked) strength++; if (document.getElementById('p-sym').checked) strength++;
   const colors = ['#ff6b6b','#ff9f6b','#ffcc6b','#6bffb8','#7bffd4']; const bar = document.getElementById('pass-bar'); bar.style.background = colors[Math.min(strength-1, 4)]; bar.style.width = (strength * 20) + '%';
 }
 
@@ -663,23 +666,25 @@ function loadNote() { const v = localStorage.getItem('sevenawy-note') || ''; doc
 function clearNote() { document.getElementById('note-text').value = ''; localStorage.removeItem('sevenawy-note'); document.getElementById('note-count').textContent = '0 chars'; }
 
 let timerMode = 'timer', timerInterval = null; let timerRunning = false, timerTotal = 0, timerLeft = 0, stopwatchMs = 0;
-function setMode(m) { timerMode = m; timerReset(); document.getElementById('timer-setup').style.display = m === 'timer' ? '' : 'none'; document.getElementById('mode-timer').className = 'btn ' + (m === 'timer' ? '' : 'secondary'); document.getElementById('mode-stop').className = 'btn ' + (m === 'stop' ? '' : 'secondary'); }
+function setMode(m) { timerMode = m; timerReset(); document.getElementById('timer-setup').style.display = m === 'timer' ? '' : 'none'; document.getElementById('mode-timer').className = 'btn ' + (m === 'timer' ? 'active' : 'secondary'); document.getElementById('mode-stop').className = 'btn ' + (m === 'stop' ? 'active' : 'secondary'); }
 function timerToggle() {
   if (timerRunning) { clearInterval(timerInterval); timerRunning = false; document.getElementById('timer-start').textContent = '▶ RESUME'; } else {
     if (timerMode === 'timer') {
       if (!timerLeft) { timerTotal = timerLeft = parseInt(document.getElementById('t-min').value || 0) * 60 + parseInt(document.getElementById('t-sec').value || 0); }
       if (!timerLeft) return;
-      timerInterval = setInterval(() => { timerLeft--; updateTimerDisplay(timerLeft, timerTotal); if (timerLeft <= 0) { clearInterval(timerInterval); timerRunning = false; showToast('⏰ Timer done!'); document.getElementById('timer-start').textContent = '▶ START'; } }, 1000);
+      timerInterval = setInterval(() => { timerLeft--; updateTimerDisplay(timerLeft, timerTotal); if (timerLeft <= 0) { clearInterval(timerInterval); timerRunning = false; showToast('⏰ Timer done!'); } }, 1000);
     } else {
-      timerInterval = setInterval(() => { stopwatchMs++; const m = String(Math.floor(stopwatchMs/60)).padStart(2,'0'); const s = String(stopwatchMs%60).padStart(2,'0'); document.getElementById('timer-disp').textContent = m + ':' + s; }, 1000);
+      timerInterval = setInterval(() => { stopwatchMs++; const m = String(Math.floor(stopwatchMs/60)).padStart(2,'0'); const s = String(stopwatchMs%60).padStart(2,'0'); document.getElementById('timer-disp').textContent = m + ':' + s; }, 100);
     }
     timerRunning = true; document.getElementById('timer-start').textContent = '⏸ PAUSE';
   }
 }
-function updateTimerDisplay(left, total) { const m = String(Math.floor(left/60)).padStart(2,'0'); const s = String(left%60).padStart(2,'0'); document.getElementById('timer-disp').textContent = m + ':' + s; document.getElementById('timer-fill').style.width = ((left/total)*100) + '%'; }
+function updateTimerDisplay(left, total) { const m = String(Math.floor(left/60)).padStart(2,'0'); const s = String(left%60).padStart(2,'0'); document.getElementById('timer-disp').textContent = m + ':' + s; document.getElementById('timer-fill').style.width = (left / total * 100) + '%'; }
 function timerReset() {
   clearInterval(timerInterval); timerRunning = false; timerLeft = 0; stopwatchMs = 0; document.getElementById('timer-start').textContent = '▶ START';
-  if (timerMode === 'timer') { const min = document.getElementById('t-min').value || '00'; const sec = document.getElementById('t-sec').value || '00'; document.getElementById('timer-disp').textContent = String(min).padStart(2,'0') + ':' + String(sec).padStart(2,'0'); document.getElementById('timer-fill').style.width = '100%'; } else { document.getElementById('timer-disp').textContent = '00:00'; }
+  if (timerMode === 'timer') { const min = document.getElementById('t-min').value || '00'; const sec = document.getElementById('t-sec').value || '00'; document.getElementById('timer-disp').textContent = String(min).padStart(2,'0') + ':' + String(sec).padStart(2,'0'); }
+  else { document.getElementById('timer-disp').textContent = '00:00'; }
+  document.getElementById('timer-fill').style.width = '100%';
 }
 setMode('timer');
 
@@ -698,8 +703,8 @@ const unitData = {
   temp: { C:'base', F:'F', K:'K' }, speed: { 'km/h':1, 'mph':0.621371, 'm/s':0.277778, knot:0.539957 },
   area: { 'm²':1, 'km²':1e-6, 'cm²':1e4, 'ft²':10.7639, acre:0.000247105, hectare:0.0001 }, data: { B:1, KB:1/1024, MB:1/1048576, GB:1/1073741824, TB:1/1099511627776, bit:8 }
 };
-function loadUnitCat() { const cat = document.getElementById('unit-cat').value; const keys = Object.keys(unitData[cat]); ['unit-from','unit-to'].forEach((id,i) => { const sel = document.getElementById(id); sel.innerHTML = keys.map(k => `<option value="${k}">${k}</option>`).join(''); sel.value = keys[i]; }); convertUnit(); }
-function convertUnit() { const cat = document.getElementById('unit-cat').value; const from = document.getElementById('unit-from').value; const to = document.getElementById('unit-to').value; const val = parseFloat(document.getElementById('unit-val').value); if (isNaN(val)) { document.getElementById('unit-out').textContent = 'Enter a number'; return; } let result; if (cat === 'temp') { let c = from === 'C' ? val : from === 'F' ? (val-32)*5/9 : val-273.15; result = to === 'C' ? c : to === 'F' ? c*9/5+32 : c+273.15; } else { const d = unitData[cat]; result = (val / d[from]) * d[to]; } document.getElementById('unit-out').textContent = `${val} ${from} = ${parseFloat(result.toFixed(6))} ${to}`; }
+function loadUnitCat() { const cat = document.getElementById('unit-cat').value; const keys = Object.keys(unitData[cat]); ['unit-from','unit-to'].forEach((id,i) => { const sel = document.getElementById(id); sel.innerHTML = keys.map(k => `<option value="${k}">${k}</option>`).join(''); }); convertUnit(); }
+function convertUnit() { const cat = document.getElementById('unit-cat').value; const from = document.getElementById('unit-from').value; const to = document.getElementById('unit-to').value; const val = parseFloat(document.getElementById('unit-val').value) || 0; if (cat === 'temp') { let c; if (from === 'C') c = val; else if (from === 'F') c = (val - 32) * 5/9; else c = val - 273.15; let r; if (to === 'C') r = c; else if (to === 'F') r = c * 9/5 + 32; else r = c + 273.15; document.getElementById('unit-out').textContent = r.toFixed(2); } else { const result = val * unitData[cat][to] / unitData[cat][from]; document.getElementById('unit-out').textContent = result.toFixed(6).replace(/0+$/, '').replace(/\.$/, ''); } }
 function swapUnits() { const f = document.getElementById('unit-from'), t = document.getElementById('unit-to'); [f.value, t.value] = [t.value, f.value]; convertUnit(); }
 
 function calcBmi() {
@@ -712,16 +717,16 @@ function calcBmi() {
 
 function encodeIt() {
   const mode = document.getElementById('enc-mode').value; const input = document.getElementById('enc-in').value; let result = '';
-  try { if (mode === 'b64enc') result = btoa(unescape(encodeURIComponent(input))); else if (mode === 'b64dec') result = decodeURIComponent(escape(atob(input))); else if (mode === 'urlenc') result = encodeURIComponent(input); else if (mode === 'urldec') result = decodeURIComponent(input); else if (mode === 'htmlenc') result = input.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); document.getElementById('enc-out').textContent = result; document.getElementById('enc-out').className = 'output'; } catch(e) { document.getElementById('enc-out').textContent = 'Error: ' + e.message; document.getElementById('enc-out').className = 'output error'; }
+  try { if (mode === 'b64enc') result = btoa(unescape(encodeURIComponent(input))); else if (mode === 'b64dec') result = decodeURIComponent(escape(atob(input))); else if (mode === 'urlenc') result = encodeURIComponent(input); else if (mode === 'urldec') result = decodeURIComponent(input); else if (mode === 'htmlenc') result = input.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;'); document.getElementById('enc-out').textContent = result; } catch(e) { document.getElementById('enc-out').textContent = 'Error: ' + e.message; }
 }
 
-function rndNum() { const min = parseInt(document.getElementById('rnd-min').value); const max = parseInt(document.getElementById('rnd-max').value); document.getElementById('rnd-out').textContent = '🎲 ' + (Math.floor(Math.random()*(max-min+1))+min); }
+function rndNum() { const min = parseInt(document.getElementById('rnd-min').value); const max = parseInt(document.getElementById('rnd-max').value); document.getElementById('rnd-out').textContent = '🎲 ' + (Math.floor(Math.random() * (max - min + 1)) + min); }
 function rndCoin() { document.getElementById('rnd-out').textContent = Math.random()<0.5 ? '🪙 HEADS' : '🪙 TAILS'; }
 function rndDice() { document.getElementById('rnd-out').textContent = '🎯 ' + (Math.floor(Math.random()*6)+1) + ' (rolled a d6)'; }
 function rndYesNo() { document.getElementById('rnd-out').textContent = Math.random()<0.5 ? '✅ YES' : '❌ NO'; }
 
-function analyzeText() { const t = document.getElementById('word-in').value; const words = t.trim() ? t.trim().split(/\s+/).length : 0; document.getElementById('wc-words').textContent = words; document.getElementById('wc-chars').textContent = t.length; document.getElementById('wc-lines').textContent = t ? t.split('\n').length : 0; const secs = Math.ceil(words / 3.5); document.getElementById('wc-read').textContent = secs < 60 ? secs + 's' : Math.ceil(secs/60) + 'm'; }
-function textCase(type) { const el = document.getElementById('word-in'); if (type==='upper') el.value = el.value.toUpperCase(); else if (type==='lower') el.value = el.value.toLowerCase(); else el.value = el.value.replace(/\w\S*/g, w => w[0].toUpperCase()+w.slice(1).toLowerCase()); analyzeText(); }
+function analyzeText() { const t = document.getElementById('word-in').value; const words = t.trim() ? t.trim().split(/\s+/).length : 0; document.getElementById('wc-words').textContent = words; document.getElementById('wc-chars').textContent = t.length; document.getElementById('wc-lines').textContent = t.trim() ? t.split('\n').length : 0; const readTime = Math.ceil(words / 200); document.getElementById('wc-read').textContent = readTime + 's'; }
+function textCase(type) { const el = document.getElementById('word-in'); if (type==='upper') el.value = el.value.toUpperCase(); else if (type==='lower') el.value = el.value.toLowerCase(); else el.value = el.value.split(' ').map(w => w[0].toUpperCase() + w.slice(1)).join(' '); analyzeText(); }
 function textReverse() { const el = document.getElementById('word-in'); el.value = el.value.split('').reverse().join(''); }
 
 function generateQR() {
@@ -733,13 +738,13 @@ function generateQR() {
 /* ── AGE (النسخة بـ 3 خانات) ── */
 function calcAge() {
   const d = parseInt(document.getElementById('age-d').value); const m = parseInt(document.getElementById('age-m').value); const y = parseInt(document.getElementById('age-y').value);
-  if (!d || !m || !y) { document.getElementById('age-out').textContent = '⚠️ الرجاء إدخال اليوم والشهر والسنة كاملة.'; document.getElementById('age-out').style.color = 'var(--danger)'; return; }
+  if (!d || !m || !y) { document.getElementById('age-out').textContent = '⚠️ الرجاء إدخال اليوم والشهر والسنة كاملة.'; document.getElementById('age-out').style.color = 'var(--warn)'; return; }
   const dob = new Date(y, m - 1, d); const now = new Date();
   let yrs = now.getFullYear() - dob.getFullYear(); let mos = now.getMonth() - dob.getMonth(); let days = now.getDate() - dob.getDate();
   if (days < 0) { mos--; days += new Date(now.getFullYear(), now.getMonth(), 0).getDate(); }
   if (mos < 0) { yrs--; mos += 12; }
   const totalDays = Math.floor((now - dob) / 86400000); const next = new Date(now.getFullYear(), dob.getMonth(), dob.getDate()); if (next < now) next.setFullYear(now.getFullYear() + 1); const daysLeft = Math.ceil((next - now) / 86400000);
-  document.getElementById('age-out').style.color = 'var(--accent3)'; document.getElementById('age-out').innerHTML = `🎂 عمرك: ${yrs} سنة، ${mos} شهر، ${days} يوم<br>📅 إجمالي الأيام: ${totalDays.toLocaleString()}<br>⏳ باقي ${daysLeft} يوم على ميلادك الجاي`;
+  document.getElementById('age-out').style.color = 'var(--accent3)'; document.getElementById('age-out').innerHTML = `🎂 عمرك: ${yrs} سنة، ${mos} شهر، ${days} يوم<br>📅 إجمالي الأيام: ${totalDays}<br>🎉 متبقي ${daysLeft} يوم لعيد ميلادك!`;
 }
 
 /* ═══════════════════════════════════════════════
@@ -752,7 +757,7 @@ const tracks = [
 ];
 let currentTrack = 0, isPlaying = false; const audio = document.getElementById('audio'); audio.volume = 0.5;
 function setVol(val) { audio.volume = val; }
-function loadTrack(i) { audio.src = tracks[i].url; document.getElementById('track-name').textContent = tracks[i].name; document.getElementById('track-sub').innerHTML = `<span class="eq-dot"></span><span class="eq-dot" style="animation-delay:.2s"></span><span class="eq-dot" style="animation-delay:.4s"></span> <span style="margin-left:4px">${tracks[i].sub}</span>`; }
+function loadTrack(i) { audio.src = tracks[i].url; document.getElementById('track-name').textContent = tracks[i].name; document.getElementById('track-sub').innerHTML = `<span class="eq-dot"></span><span class="eq-dot" style="animation-delay:.2s"></span><span class="eq-dot" style="animation-delay:.4s"></span><span style="margin-left:4px">${tracks[i].sub}</span>`; }
 function togglePlay() {
   if (!audio.src || audio.src === window.location.href) loadTrack(currentTrack);
   if (isPlaying) { audio.pause(); isPlaying = false; document.getElementById('play-btn').textContent = '▶'; }
@@ -807,8 +812,8 @@ const JOJO_DATA = [
   {
     part: 'الجزء الأول: فانتوم بلود', year: '1880 — إنجلترا', color: '#8b6914', story: 'تبدأ الملحمة بصراع النبيل جوناثان...',
     chars: [
-      { name: 'جوناثان جوستار', role: 'البطل الرئيسي', align: 'طيب', img: 'static/1o1.png', longDesc: 'يمتلك قلباً نقياً وإرادة من حديد، ويقاتل بالهامون.', extraImgs: ['static/p1.jpg', 'static/p2.jpg', 'static/p3.jpg'] },
-      { name: 'ديو براندو', role: 'الخصم الرئيسي', align: 'شرير', img: 'static/2o1.jpg', longDesc: 'طموح لا حدود له، تحوّل إلى مصاص دماء قوي.', extraImgs: ['static/d1.jpg', 'static/d2.jpg', 'static/d3.jpg'] }
+      { name: 'جوناثان جوستار', role: 'البطل الرئيسي', align: 'طيب', img: 'static/1o1.png', longDesc: 'يمتلك قلباً نقياً وإرادة من حديد، يقف ضد الظلم بكل قوة.' },
+      { name: 'ديو براندو', role: 'الخصم الرئيسي', align: 'شرير', img: 'static/2o1.jpg', longDesc: 'طموح لا حدود له، تحوّل إلى مصاص دماء قوي.' },
     ],
     sideChars: [
       { name: 'جاك السفاح', role: 'شرير ثانوي', img: 'static/jack.jpg', desc: 'قاتل متسلسل أصبح زومبي بيد ديو.' },
@@ -818,7 +823,7 @@ const JOJO_DATA = [
   {
     part: 'الجزء الثاني: معركة الاتجاه', year: '1938 — أمريكا', color: '#2e7d32', story: 'يواجه جوزيف البشر القدماء...',
     chars: [
-      { name: 'جوزيف جوستار', role: 'البطل الرئيسي', align: 'طيب', img: 'static/7.jpg', longDesc: 'ماكر ومرح، يعتمد على الخداع الاستراتيجي.', extraImgs: ['static/j1.jpg', 'static/j2.jpg', 'static/j3.jpg'] }
+      { name: 'جوزيف جوستار', role: 'البطل الرئيسي', align: 'طيب', img: 'static/7.jpg', longDesc: 'ماكر ومرح، يعتمد على الخداع الاستراتيجي.' },
     ],
     sideChars: [ { name: 'سانتانا', role: 'بشري قديم', img: 'static/santana.jpg', desc: 'أول بشري قديم واجهه جوزيف.' } ]
   }
@@ -827,7 +832,7 @@ const JOJO_DATA = [
 let jojoPart = 0;
 function jojoRender() {
   const tabs = document.getElementById('jojo-tabs');
-  tabs.innerHTML = JOJO_DATA.map((p, i) => `<button onclick="jojoSetPart(${i})" style="background:${i===jojoPart ? p.color+'33' : 'var(--bg3)'};border:1px solid ${i===jojoPart ? p.color : 'var(--border)'};color:${i===jojoPart ? p.color : 'var(--text)'};border-radius:8px;padding:5px 10px;font-family:'Space Mono',monospace;cursor:pointer;">الجزء ${i+1}</button>`).join('');
+  tabs.innerHTML = JOJO_DATA.map((p, i) => `<button onclick="jojoSetPart(${i})" style="background:${i===jojoPart ? p.color+'33' : 'var(--bg3)'};border:1px solid ${i===jojoPart ? p.color : 'var(--border)'};padding:8px 14px;border-radius:8px;cursor:pointer;color:var(--text);font-size:0.8rem;font-weight:bold;">${p.part}</button>`).join('');
   const part = JOJO_DATA[jojoPart];
   document.getElementById('jojo-story').innerHTML = `<div style="font-weight:bold; color:${part.color}; font-size:1.1rem; margin-bottom:8px;">📖 ${part.part}</div><div>${part.story}</div>`;
   
@@ -872,7 +877,7 @@ function closeJojoModal() { document.getElementById('jojo-modal').classList.remo
 const _origToggle = toggle;
 window.toggle = function(id) { _origToggle(id); if (id === 'jojo' && !document.getElementById('jojo').classList.contains('hidden')) jojoRender(); };
 // تفعيل تحميل أدوات التصنيف
-window.onload = function() { loadUnitCat(); };
+window.onload = function() { loadUnitCat(); loadNote(); };
 </script>
 </body>
 </html>
