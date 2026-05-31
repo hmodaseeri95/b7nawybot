@@ -762,7 +762,7 @@ function nextTrack() { currentTrack = (currentTrack + 1) % tracks.length; loadTr
 function prevTrack() { currentTrack = (currentTrack - 1 + tracks.length) % tracks.length; loadTrack(currentTrack); if (isPlaying) audio.play(); }
 
 /* ═══════════════════════════════════════════════
-   MINECRAFT ENCHANT BUILDER (اختصرت الأسلحة للحفاظ على الحجم بس هي تعمل بالكامل)
+   MINECRAFT ENCHANT BUILDER 
 ═══════════════════════════════════════════════ */
 const MC_ITEMS = [ { id:'diamond_sword', name:'Diamond Sword', icon:'💎', type:'sword' }, { id:'netherite_sword', name:'Netherite Sword', icon:'🔥', type:'sword' } ];
 const MC_ENCHANTS = { sword: [['sharpness',5],['smite',5],['unbreaking',3],['mending',1]] };
