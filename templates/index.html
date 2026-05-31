@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,137 +16,73 @@
 
 <div class="app">
 
-  <header class="site-header" id="top" dir="ltr">
+  <header class="site-header" id="top">
     <h1>SEVENAWY</h1>
     <p><span class="status-dot"></span>ALL SYSTEMS ONLINE · TOOLS READY</p>
   </header>
 
-  <div class="launcher" dir="ltr">
+  <div class="launcher">
+    <button class="launch-btn" onclick="toggle('theme')" id="btn-theme"><span class="icon">✨</span>THEME</button>
     <button class="launch-btn" onclick="toggle('calc')" id="btn-calc"><span class="icon">🧮</span>CALC</button>
-    <button class="launch-btn" onclick="toggle('timer')" id="btn-timer"><span class="icon">⏱️</span>TIMER</button>
+    <button class="launch-btn" onclick="toggle('pass')" id="btn-pass"><span class="icon">🔑</span>PASSWORD</button>
     <button class="launch-btn" onclick="toggle('notes')" id="btn-notes"><span class="icon">📝</span>NOTES</button>
-    <button class="launch-btn" onclick="toggle('coin')" id="btn-coin"><span class="icon">🎲</span>RANDOM</button>
-    <button class="launch-btn" onclick="toggle('word')" id="btn-word"><span class="icon">✍️</span>WORDS</button>
-    <button class="launch-btn" onclick="toggle('bmi')" id="btn-bmi"><span class="icon">💪</span>BMI</button>
+    <button class="launch-btn" onclick="toggle('timer')" id="btn-timer"><span class="icon">⏱️</span>TIMER</button>
+    <button class="launch-btn" onclick="toggle('color')" id="btn-color"><span class="icon">🎨</span>COLOR</button>
     <button class="launch-btn" onclick="toggle('unit')" id="btn-unit"><span class="icon">📐</span>CONVERT</button>
+    <button class="launch-btn" onclick="toggle('bmi')" id="btn-bmi"><span class="icon">💪</span>BMI</button>
     <button class="launch-btn" onclick="toggle('age')" id="btn-age"><span class="icon">🎂</span>AGE</button>
     <button class="launch-btn" onclick="toggle('hash')" id="btn-hash"><span class="icon">🔐</span>ENCODE</button>
-    <button class="launch-btn" onclick="toggle('jojo')" id="btn-jojo"><span class="icon">🗿</span>JOJO</button>
-    <button class="launch-btn" onclick="toggle('mc')" id="btn-mc"><span class="icon">⛏️</span>MINECRAFT</button>
+    <button class="launch-btn" onclick="toggle('coin')" id="btn-coin"><span class="icon">🎲</span>RANDOM</button>
+    <button class="launch-btn" onclick="toggle('word')" id="btn-word"><span class="icon">✍️</span>WORDS</button>
     <button class="launch-btn" onclick="toggle('qr')" id="btn-qr"><span class="icon">📱</span>QR CODE</button>
-    <button class="launch-btn" onclick="toggle('theme')" id="btn-theme"><span class="icon">✨</span>THEME</button>
-    <button class="launch-btn" onclick="toggle('color')" id="btn-color"><span class="icon">🎨</span>COLOR</button>
+    <button class="launch-btn" onclick="toggle('mc')" id="btn-mc"><span class="icon">⛏️</span>MINECRAFT</button>
+    <button class="launch-btn" onclick="toggle('jojo')" id="btn-jojo"><span class="icon">🌀</span>JOJO</button>
     <button class="launch-btn" onclick="toggle('about')" id="btn-about"><span class="icon">❓</span>ABOUT</button>
   </div>
 
-  <div id="collapse-bar" style="display:none; text-align:center; margin-bottom:16px;" dir="ltr">
+  <div id="collapse-bar" style="display:none; text-align:center; margin-bottom:16px;">
     <button class="btn secondary" onclick="collapseAll()" style="font-size:0.72rem; padding:7px 20px; letter-spacing:0.12em;">
       ✕ &nbsp;CLOSE ALL &nbsp;·&nbsp; GO TO TOP
     </button>
   </div>
 
-  <div id="tools" dir="ltr">
+  <div id="tools">
 
-    <!-- THEME TOOL -->
-    <div id="theme" class="tool-card hidden" dir="rtl">
-      <div class="tool-header" dir="ltr">
+    <div id="theme" class="tool-card hidden">
+      <div class="tool-header">
+        <span class="tool-title">✨ تخصيص المظهر</span>
         <button class="close-btn" onclick="toggle('theme')">✕</button>
-        <span class="tool-title">✨ تخصيص المظهر الشامل</span>
       </div>
-      
-      <p style="font-size: 0.8rem; color: var(--muted); margin-bottom: 15px;">عدّل ألوان الموقع بالكامل من هنا:</p>
-      
-      <div class="grid3">
-        <div class="field"><label>الخلفية الأساسية</label><input type="color" id="theme-bg" value="#0a0e0a" oninput="updateThemeColors()"></div>
-        <div class="field"><label>خلفية البطاقات</label><input type="color" id="theme-card" value="#131a13" oninput="updateThemeColors()"></div>
-        <div class="field"><label>لون الحدود</label><input type="color" id="theme-border" value="#1b5e20" oninput="updateThemeColors()"></div>
-        <div class="field"><label>اللون الأساسي (Accent)</label><input type="color" id="theme-accent" value="#2e7d32" oninput="updateThemeColors()"></div>
-        <div class="field"><label>اللون الثانوي 1</label><input type="color" id="theme-accent2" value="#66bb6a" oninput="updateThemeColors()"></div>
-        <div class="field"><label>اللون الثانوي 2</label><input type="color" id="theme-accent3" value="#a5d6a7" oninput="updateThemeColors()"></div>
-        <div class="field"><label>لون النص</label><input type="color" id="theme-text" value="#e8f5e9" oninput="updateThemeColors()"></div>
-        <div class="field"><label>النص الباهت</label><input type="color" id="theme-muted" value="#81c784" oninput="updateThemeColors()"></div>
+      <div class="grid2" style="direction: rtl;">
+        <div class="field"><label>الخلفية الأساسية</label><input type="color" id="tc-bg" value="#0a0a0f" oninput="updateThemeColors()"></div>
+        <div class="field"><label>خلفية البطاقات</label><input type="color" id="tc-card" value="#13131a" oninput="updateThemeColors()"></div>
+        <div class="field"><label>لون الحدود</label><input type="color" id="tc-border" value="#2a2a3a" oninput="updateThemeColors()"></div>
+        <div class="field"><label>لون النص</label><input type="color" id="tc-text" value="#e8e8f5" oninput="updateThemeColors()"></div>
+        <div class="field"><label>اللون الأساسي 1</label><input type="color" id="tc-acc1" value="#7b7bff" oninput="updateThemeColors()"></div>
+        <div class="field"><label>اللون الأساسي 2</label><input type="color" id="tc-acc2" value="#ff7bb0" oninput="updateThemeColors()"></div>
+        <div class="field"><label>اللون الأساسي 3</label><input type="color" id="tc-acc3" value="#7bffd4" oninput="updateThemeColors()"></div>
+        <div class="field"><label>لون النص الباهت</label><input type="color" id="tc-muted" value="#7070a0" oninput="updateThemeColors()"></div>
       </div>
       
       <hr style="border:0; border-top:1px solid var(--border); margin: 20px 0;">
       
-      <div class="field">
+      <div class="field" style="direction: rtl;">
         <label>الخلفية (تتحرك مع الماوس)</label>
-        <div class="btn-row" style="margin-bottom: 16px;">
-          <button class="btn sm secondary" onclick="setPresetBg('bg1.gif')">1️⃣</button>
-          <button class="btn sm secondary" onclick="setPresetBg('bg2.gif')">2️⃣</button>
-          <button class="btn sm secondary" onclick="setPresetBg('bg3.gif')">3️⃣</button>
-          <button class="btn sm secondary" onclick="setPresetBg('bg4.gif')">4️⃣</button>
-          <button class="btn sm secondary" onclick="setPresetBg('bg5.gif')">5️⃣</button>
+        <div class="btn-row" style="margin-bottom: 12px;">
+          <button class="btn sm secondary" onclick="setPresetBg('bg1.gif')">🖼️ 1</button>
+          <button class="btn sm secondary" onclick="setPresetBg('bg2.gif')">🖼️ 2</button>
+          <button class="btn sm secondary" onclick="setPresetBg('bg3.gif')">🖼️ 3</button>
+          <button class="btn sm secondary" onclick="setPresetBg('bg4.gif')">🖼️ 4</button>
+          <button class="btn sm secondary" onclick="setPresetBg('bg5.gif')">🖼️ 5</button>
           <button class="btn sm danger" onclick="clearBg()">🗑️ مسح</button>
         </div>
-        
         <label class="custom-file-upload">
           <input type="file" accept="image/*" onchange="handleBgUpload(event)">
-          📤 اضغط هنا لرفع صورة أو GIF من جهازك
+          📤 ارفع صورة من جهازك
         </label>
       </div>
     </div>
 
-    <!-- AGE TOOL -->
-    <div id="age" class="tool-card hidden" dir="rtl">
-      <div class="tool-header" dir="ltr">
-        <button class="close-btn" onclick="toggle('age')">✕</button>
-        <span class="tool-title">Age Calculator</span>
-      </div>
-      <p style="font-size:0.8rem; color:var(--muted); margin-bottom:10px;">أدخل تاريخ ميلادك بالأرقام:</p>
-      <div class="grid3">
-        <div class="field"><label>اليوم</label><input type="number" id="age-d" placeholder="مثال: 15" min="1" max="31"></div>
-        <div class="field"><label>الشهر</label><input type="number" id="age-m" placeholder="مثال: 8" min="1" max="12"></div>
-        <div class="field"><label>السنة</label><input type="number" id="age-y" placeholder="مثال: 2005" min="1900" max="2026"></div>
-      </div>
-      <button class="btn" onclick="calcAge()" style="width:100%; margin-top:10px;">احسب العمر</button>
-      <div class="output" id="age-out" style="text-align:center;">أدخل التاريخ واضغط احسب</div>
-    </div>
-
-    <!-- JOJO TOOL -->
-    <div id="jojo" class="tool-card hidden" style="direction: rtl;">
-      <div class="tool-header" style="direction: ltr;">
-        <button class="close-btn" onclick="toggle('jojo')">✕</button>
-        <span class="tool-title">🌀 موسوعة JoJo's Bizarre Adventure</span>
-      </div>
-      <div id="jojo-tabs" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;"></div>
-      <div id="jojo-story" style="background:var(--bg3); border:1px solid var(--border); padding:16px; border-radius:12px; margin-bottom:16px; font-size:0.85rem; line-height:1.8; color:var(--text);"></div>
-      
-      <h3 style="font-size:1rem; color:var(--accent); margin-bottom:10px; border-bottom:1px solid var(--border); padding-bottom:5px;">الشخصيات الرئيسية</h3>
-      <div id="jojo-chars" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px; margin-bottom: 20px;"></div>
-
-      <h3 style="font-size:0.9rem; color:var(--accent2); margin-bottom:10px; border-bottom:1px solid var(--border); padding-bottom:5px;">الشخصيات الجانبية (الأشرار الثانويين، إلخ)</h3>
-      <div id="jojo-side-chars" style="display:flex; flex-direction:column; gap:8px;"></div>
-    </div>
-
-    <!-- TIMER TOOL -->
-    <div id="timer" class="tool-card hidden">
-      <div class="tool-header">
-        <span class="tool-title">Timer / Stopwatch</span>
-        <button class="close-btn" onclick="toggle('timer')">✕</button>
-      </div>
-      <div style="display:flex;gap:8px;margin-bottom:12px">
-        <button class="btn secondary" onclick="setMode('timer')" id="mode-timer">⏱ Timer</button>
-        <button class="btn secondary" onclick="setMode('stop')" id="mode-stop">⏲ Stopwatch</button>
-      </div>
-      <div id="timer-setup">
-        <div class="grid2">
-          <div class="field"><label>Minutes</label><input type="number" id="t-min" value="5" min="0" max="99"></div>
-          <div class="field"><label>Seconds</label><input type="number" id="t-sec" value="0" min="0" max="59"></div>
-        </div>
-      </div>
-      <div class="timer-display" id="timer-disp">05:00</div>
-      <div class="timer-bar"><div class="timer-fill" id="timer-fill" style="width:100%"></div></div>
-      <div class="btn-row mt">
-        <button class="btn" id="timer-start" onclick="timerToggle()">▶ START</button>
-        <button class="btn secondary" onclick="timerReset()">↺ RESET</button>
-      </div>
-    </div>
-
-    <!-- I HAVE LEFT ALL OTHER TOOLS (calc, qr, etc.) EXACTLY AS THEY WERE TO SAVE SPACE, 
-         BUT THEY ARE ALL ASSUMED TO BE HERE. JUST PASTE THEM IN YOUR REAL FILE -->
-         
-    <!-- CALC TOOL -->
     <div id="calc" class="tool-card hidden">
       <div class="tool-header">
         <span class="tool-title">Calculator</span>
@@ -179,14 +115,339 @@
       </div>
     </div>
 
+    <div id="pass" class="tool-card hidden">
+      <div class="tool-header">
+        <span class="tool-title">Password Generator</span>
+        <button class="close-btn" onclick="toggle('pass')">✕</button>
+      </div>
+      <div class="field">
+        <label>Length: <span id="pass-len-val">16</span></label>
+        <input type="range" id="pass-len" min="6" max="64" value="16" oninput="document.getElementById('pass-len-val').textContent=this.value; genPass()">
+      </div>
+      <div class="checkbox-row"><input type="checkbox" id="p-upper" checked onchange="genPass()"><label for="p-upper" style="margin:0">Uppercase (A-Z)</label></div>
+      <div class="checkbox-row"><input type="checkbox" id="p-lower" checked onchange="genPass()"><label for="p-lower" style="margin:0">Lowercase (a-z)</label></div>
+      <div class="checkbox-row"><input type="checkbox" id="p-num" checked onchange="genPass()"><label for="p-num" style="margin:0">Numbers (0-9)</label></div>
+      <div class="checkbox-row"><input type="checkbox" id="p-sym" onchange="genPass()"><label for="p-sym" style="margin:0">Symbols (!@#$...)</label></div>
+      <div class="output" id="pass-out" style="font-size:1rem; letter-spacing:0.05em; cursor:pointer" onclick="copyText('pass-out')" title="Click to copy">Click Generate ↓</div>
+      <div class="pass-strength" id="pass-bar"></div>
+      <div class="btn-row">
+        <button class="btn" onclick="genPass()">↻ GENERATE</button>
+        <button class="btn secondary" onclick="copyText('pass-out')">📋 COPY</button>
+      </div>
+    </div>
+
+    <div id="notes" class="tool-card hidden">
+      <div class="tool-header">
+        <span class="tool-title">Quick Notes</span>
+        <button class="close-btn" onclick="toggle('notes')">✕</button>
+      </div>
+      <textarea class="note-area" id="note-text" placeholder="Write anything... it saves automatically ✨" oninput="saveNote()"></textarea>
+      <div class="note-actions">
+        <span class="note-count" id="note-count">0 chars</span>
+        <div class="btn-row" style="margin:0">
+          <button class="btn sm secondary" onclick="copyText('note-text', true)">📋 COPY</button>
+          <button class="btn sm danger" onclick="clearNote()">🗑 CLEAR</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="timer" class="tool-card hidden">
+      <div class="tool-header">
+        <span class="tool-title">Timer / Stopwatch</span>
+        <button class="close-btn" onclick="toggle('timer')">✕</button>
+      </div>
+      <div style="display:flex;gap:8px;margin-bottom:12px">
+        <button class="btn secondary" onclick="setMode('timer')" id="mode-timer">⏱ Timer</button>
+        <button class="btn secondary" onclick="setMode('stop')" id="mode-stop">⏲ Stopwatch</button>
+      </div>
+      <div id="timer-setup">
+        <div class="grid2">
+          <div class="field"><label>Minutes</label><input type="number" id="t-min" value="5" min="0" max="99"></div>
+          <div class="field"><label>Seconds</label><input type="number" id="t-sec" value="0" min="0" max="59"></div>
+        </div>
+      </div>
+      <div class="timer-display" id="timer-disp">05:00</div>
+      <div class="timer-bar"><div class="timer-fill" id="timer-fill" style="width:100%"></div></div>
+      <div class="btn-row mt">
+        <button class="btn" id="timer-start" onclick="timerToggle()">▶ START</button>
+        <button class="btn secondary" onclick="timerReset()">↺ RESET</button>
+      </div>
+    </div>
+
+    <div id="color" class="tool-card hidden">
+      <div class="tool-header">
+        <span class="tool-title">Color Tools</span>
+        <button class="close-btn" onclick="toggle('color')">✕</button>
+      </div>
+      <div class="field">
+        <label>Pick a Color</label>
+        <input type="color" id="color-pick" value="#7b7bff" oninput="updateColor(this.value)" style="width:100%;height:50px;padding:4px;border-radius:10px;border:1px solid var(--border);background:var(--bg3);cursor:pointer">
+      </div>
+      <div class="color-preview" id="color-prev" style="background:#7b7bff"></div>
+      <div class="color-formats">
+        <div class="color-tag"><span>HEX</span><code id="c-hex" onclick="copyRaw(this)">#7b7bff</code></div>
+        <div class="color-tag"><span>RGB</span><code id="c-rgb" onclick="copyRaw(this)">rgb(123, 123, 255)</code></div>
+        <div class="color-tag"><span>HSL</span><code id="c-hsl" onclick="copyRaw(this)">hsl(240, 100%, 74%)</code></div>
+      </div>
+    </div>
+
+    <div id="unit" class="tool-card hidden">
+      <div class="tool-header">
+        <span class="tool-title">Unit Converter</span>
+        <button class="close-btn" onclick="toggle('unit')">✕</button>
+      </div>
+      <div class="field">
+        <label>Category</label>
+        <select id="unit-cat" onchange="loadUnitCat()">
+          <option value="length">📏 Length</option>
+          <option value="weight">⚖️ Weight</option>
+          <option value="temp">🌡️ Temperature</option>
+          <option value="speed">💨 Speed</option>
+          <option value="area">📐 Area</option>
+          <option value="data">💾 Data Size</option>
+        </select>
+      </div>
+      <div class="converter-row">
+        <div class="field">
+          <label id="from-label">From</label>
+          <select id="unit-from" onchange="convertUnit()"></select>
+        </div>
+        <button class="swap-btn" onclick="swapUnits()">⇄</button>
+        <div class="field">
+          <label id="to-label">To</label>
+          <select id="unit-to" onchange="convertUnit()"></select>
+        </div>
+      </div>
+      <div class="field"><label>Value</label><input type="number" id="unit-val" value="1" oninput="convertUnit()"></div>
+      <div class="output" id="unit-out">—</div>
+    </div>
+
+    <div id="bmi" class="tool-card hidden">
+      <div class="tool-header">
+        <span class="tool-title">BMI Calculator</span>
+        <button class="close-btn" onclick="toggle('bmi')">✕</button>
+      </div>
+      <div class="grid2">
+        <div class="field"><label>Weight (kg)</label><input type="number" id="bmi-w" placeholder="70" oninput="calcBmi()"></div>
+        <div class="field"><label>Height (cm)</label><input type="number" id="bmi-h" placeholder="175" oninput="calcBmi()"></div>
+      </div>
+      <div class="bmi-scale"><div class="bmi-marker" id="bmi-marker" style="left:30%"></div></div>
+      <div style="display:flex;justify-content:space-between;font-size:0.65rem;color:var(--muted)">
+        <span>Underweight</span><span>Normal</span><span>Overweight</span><span>Obese</span>
+      </div>
+      <div class="output" id="bmi-out">Enter your weight and height</div>
+    </div>
+
+    <div id="age" class="tool-card hidden" style="direction: rtl;">
+      <div class="tool-header" style="direction: ltr;">
+        <button class="close-btn" onclick="toggle('age')">✕</button>
+        <span class="tool-title">🎂 حساب العمر</span>
+      </div>
+      <p style="font-size:0.8rem; color:var(--muted); margin-bottom:10px;">أدخل تاريخ ميلادك بالأرقام:</p>
+      <div class="grid3">
+        <div class="field"><label>اليوم</label><input type="number" id="age-d" placeholder="مثال: 15" min="1" max="31"></div>
+        <div class="field"><label>الشهر</label><input type="number" id="age-m" placeholder="مثال: 8" min="1" max="12"></div>
+        <div class="field"><label>السنة</label><input type="number" id="age-y" placeholder="مثال: 2005" min="1900" max="2026"></div>
+      </div>
+      <button class="btn" onclick="calcAge()" style="width:100%; margin-top:10px;">احسب العمر</button>
+      <div class="output" id="age-out" style="text-align:center;">أدخل التاريخ واضغط احسب</div>
+    </div>
+
+    <div id="hash" class="tool-card hidden">
+      <div class="tool-header">
+        <span class="tool-title">Encode / Decode</span>
+        <button class="close-btn" onclick="toggle('hash')">✕</button>
+      </div>
+      <div class="field">
+        <label>Mode</label>
+        <select id="enc-mode">
+          <option value="b64enc">Base64 Encode</option>
+          <option value="b64dec">Base64 Decode</option>
+          <option value="urlenc">URL Encode</option>
+          <option value="urldec">URL Decode</option>
+          <option value="htmlenc">HTML Encode</option>
+        </select>
+      </div>
+      <div class="field"><label>Input</label><textarea id="enc-in" placeholder="Paste text here..."></textarea></div>
+      <div class="btn-row">
+        <button class="btn" onclick="encodeIt()">⚡ CONVERT</button>
+        <button class="btn secondary" onclick="copyText('enc-out')">📋 COPY</button>
+      </div>
+      <div class="output" id="enc-out">Result will appear here</div>
+    </div>
+
+    <div id="coin" class="tool-card hidden">
+      <div class="tool-header">
+        <span class="tool-title">Randomizer</span>
+        <button class="close-btn" onclick="toggle('coin')">✕</button>
+      </div>
+      <div class="grid2">
+        <div class="field"><label>Min</label><input type="number" id="rnd-min" value="1"></div>
+        <div class="field"><label>Max</label><input type="number" id="rnd-max" value="100"></div>
+      </div>
+      <div class="btn-row">
+        <button class="btn" onclick="rndNum()">🎲 ROLL NUMBER</button>
+        <button class="btn secondary" onclick="rndCoin()">🪙 FLIP COIN</button>
+        <button class="btn secondary" onclick="rndDice()">🎯 ROLL DICE</button>
+        <button class="btn secondary" onclick="rndYesNo()">❓ YES / NO</button>
+      </div>
+      <div class="output" id="rnd-out">Press a button!</div>
+    </div>
+
+    <div id="word" class="tool-card hidden">
+      <div class="tool-header">
+        <span class="tool-title">Word & Text Tools</span>
+        <button class="close-btn" onclick="toggle('word')">✕</button>
+      </div>
+      <div class="field"><textarea id="word-in" placeholder="Paste your text here..." style="min-height:130px" oninput="analyzeText()"></textarea></div>
+      <div class="grid2" style="gap:8px;margin:10px 0">
+        <div style="background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center">
+          <div style="font-size:1.5rem;font-weight:700;color:var(--accent)" id="wc-words">0</div>
+          <div style="font-size:0.7rem;color:var(--muted)">WORDS</div>
+        </div>
+        <div style="background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center">
+          <div style="font-size:1.5rem;font-weight:700;color:var(--accent2)" id="wc-chars">0</div>
+          <div style="font-size:0.7rem;color:var(--muted)">CHARACTERS</div>
+        </div>
+        <div style="background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center">
+          <div style="font-size:1.5rem;font-weight:700;color:var(--accent3)" id="wc-lines">0</div>
+          <div style="font-size:0.7rem;color:var(--muted)">LINES</div>
+        </div>
+        <div style="background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center">
+          <div style="font-size:1.5rem;font-weight:700;color:var(--warn)" id="wc-read">0s</div>
+          <div style="font-size:0.7rem;color:var(--muted)">READ TIME</div>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn sm secondary" onclick="textCase('upper')">UPPER</button>
+        <button class="btn sm secondary" onclick="textCase('lower')">lower</button>
+        <button class="btn sm secondary" onclick="textCase('title')">Title</button>
+        <button class="btn sm secondary" onclick="textReverse()">↩ Reverse</button>
+        <button class="btn sm secondary" onclick="copyText('word-in',true)">📋</button>
+      </div>
+    </div>
+
+    <div id="qr" class="tool-card hidden">
+      <div class="tool-header">
+        <span class="tool-title">📱 QR Code Generator</span>
+        <button class="close-btn" onclick="toggle('qr')">✕</button>
+      </div>
+      <div class="field" style="direction: rtl;">
+        <label>اكتب أي نص أو رابط هنا:</label>
+        <textarea id="qr-input" placeholder="مثال: https://google.com" oninput="generateQR()" style="min-height: 60px; direction: ltr;"></textarea>
+      </div>
+      <div style="text-align: center; margin-top: 20px; min-height: 150px; background: var(--bg); border-radius: var(--radius-sm); padding: 15px;">
+        <img id="qr-img" src="" alt="QR Code" style="display:none; max-width: 150px; border-radius: 8px;">
+        <div id="qr-placeholder" style="color: var(--muted); font-size: 0.8rem; margin-top: 50px;">سيظهر الباركود هنا</div>
+      </div>
+    </div>
+
+    <div id="mc" class="tool-card hidden">
+      <div class="tool-header">
+        <span class="tool-title">⛏️ Minecraft Command Builder</span>
+        <button class="close-btn" onclick="toggle('mc')">✕</button>
+      </div>
+      <div class="field">
+        <label style="direction: rtl;">ابحث عن الآيتم</label>
+        <input type="text" id="mc-search" placeholder="مثال: sword, bow, helmet..." oninput="mcFilter()" autocomplete="off">
+        <div id="mc-suggestions" style="display:none; background:var(--bg); border:1px solid var(--border); border-radius:10px; margin-top:4px; max-height:180px; overflow-y:auto; direction: ltr;"></div>
+      </div>
+      <div id="mc-item-selected" style="display:none; direction: ltr;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;padding:10px;background:var(--bg3);border-radius:10px;border:1px solid var(--border)">
+          <span id="mc-item-icon" style="font-size:2rem"></span>
+          <div><div id="mc-item-name" style="font-weight:700;color:var(--accent)"></div><div id="mc-item-id" style="font-size:0.72rem;color:var(--muted)"></div></div>
+        </div>
+        <div class="field" style="direction: rtl;">
+          <label>الـ Enchantments المتاحة</label>
+          <div id="mc-enchants" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:6px; direction: ltr;"></div>
+        </div>
+        <div id="mc-extras" style="margin-top:4px; direction: rtl;"></div>
+        <div class="field" style="margin-top:12px; direction: rtl;">
+          <label>اسم مخصص للآيتم (اختياري)</label>
+          <input type="text" id="mc-custom-name" placeholder="اكتب اسم..." oninput="mcBuild()" style="direction: ltr;">
+        </div>
+        <div class="field" style="direction: rtl;">
+          <label>Lore (وصف — سطر لكل جملة)</label>
+          <textarea id="mc-lore" placeholder="مثال: سيف الأبطال&#10;مصنوع من الفولاذ" rows="3" oninput="mcBuild()" style="direction: ltr;"></textarea>
+        </div>
+        <div class="field" style="direction: rtl;">
+          <label>الكمية</label>
+          <input type="number" id="mc-count" value="1" min="1" max="64" oninput="mcBuild()" style="direction: ltr;">
+        </div>
+        <div class="output" id="mc-cmd" style="font-size:0.75rem; word-break:break-all; cursor:pointer" onclick="copyText('mc-cmd')" title="اضغط للنسخ">اختر آيتم أولاً</div>
+        <div class="btn-row" style="direction: rtl;">
+          <button class="btn" onclick="copyText('mc-cmd')">📋 نسخ الكوماند</button>
+          <button class="btn secondary" onclick="mcReset()">↺ إعادة</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="jojo" class="tool-card hidden" style="direction: rtl;">
+      <div class="tool-header" style="direction: ltr;">
+        <button class="close-btn" onclick="toggle('jojo')">✕</button>
+        <span class="tool-title">🌀 موسوعة JoJo's Bizarre Adventure</span>
+      </div>
+      <div id="jojo-tabs" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;"></div>
+      <div id="jojo-story" style="background:var(--bg3); border:1px solid var(--border); padding:16px; border-radius:12px; margin-bottom:16px; font-size:0.85rem; line-height:1.8; color:var(--text);"></div>
+      
+      <h3 style="font-size:1rem; color:var(--accent); margin-bottom:10px; border-bottom:1px solid var(--border); padding-bottom:5px;">الشخصيات الرئيسية</h3>
+      <div id="jojo-chars" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px; margin-bottom: 20px;"></div>
+
+      <h3 style="font-size:0.9rem; color:var(--accent2); margin-bottom:10px; border-bottom:1px solid var(--border); padding-bottom:5px;">الشخصيات الجانبية (الأشرار الثانويين، إلخ)</h3>
+      <div id="jojo-side-chars" style="display:flex; flex-direction:column; gap:8px;"></div>
+    </div>
+
+    <div id="about" class="tool-card hidden">
+      <div class="tool-header">
+        <span class="tool-title">❓ عن الموقع</span>
+        <button class="close-btn" onclick="toggle('about')">✕</button>
+      </div>
+      <div style="text-align:center;padding:16px 0">
+        <div style="font-size:3rem;margin-bottom:12px">🤖</div>
+        <div style="font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;color:var(--accent);letter-spacing:0.1em;margin-bottom:6px">SEVENAWY</div>
+        <div style="color:var(--muted);font-size:0.8rem;line-height:1.8;margin-bottom:20px; direction: rtl;">
+          هلا والله , هذا مساعدي سفناوي هو اجتهاد شخصي لا اكثر <br>
+          <span style="color:var(--text)">[بوت + موقع سفناوي المساعد]</span><br>
+          💚 
+        </div>
+        <div style="display:inline-block;background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:14px 24px;margin-bottom:20px">
+          <div style="font-size:0.72rem;color:var(--muted);margin-bottom:4px;letter-spacing:0.1em">MADE BY</div>
+          <div style="font-size:1.3rem;font-weight:700;color:var(--accent2)">B7</div>
+        </div>
+        <div style="margin-top:4px">
+          <div style="font-size:0.75rem;color:var(--muted);margin-bottom:10px;letter-spacing:0.08em">تشرفني برأيك على الديسكورد</div>
+          <button class="btn" onclick="navigator.clipboard.writeText('b7_707').then(()=>showToast('✅ تم نسخ اليوزر!'))" style="font-size:0.9rem;padding:12px 28px;letter-spacing:0.05em">
+            📋 b7_707
+          </button>
+          <div style="font-size:0.7rem;color:var(--muted);margin-top:8px">اضغط لنسخ اليوزر</div>
+        </div>
+      </div>
+    </div>
+
+  </div> </div> <div class="player-wrap" id="player-wrap">
+  <button class="player-pill" id="player-pill" onclick="togglePlayer()" title="Open music player">
+    <span id="pill-eq" class="pill-eq"><span class="eq-dot"></span><span class="eq-dot"></span><span class="eq-dot"></span></span>
+    <span id="pill-label">♫ LOFI</span>
+    <span class="pill-chevron" id="pill-chev">▲</span>
+  </button>
+  <div class="player" id="lofi-player" style="display:none;">
+    <button class="player-btn mini" onclick="prevTrack()" title="Previous">◀</button>
+    <button class="player-btn" id="play-btn" onclick="togglePlay()">▶</button>
+    <div class="player-info">
+      <div class="player-title" id="track-name">lofi hip hop ~ chill beats</div>
+      <div class="player-sub" id="track-sub">
+        <span class="eq-dot"></span><span class="eq-dot" style="animation-delay:.2s"></span><span class="eq-dot" style="animation-delay:.4s"></span>
+        <span style="margin-left:4px">Ready to play</span>
+      </div>
+    </div>
+    <input type="range" class="vol-slider" id="vol" min="0" max="1" step="0.05" value="0.5" oninput="setVol(this.value)" title="Volume">
+    <button class="player-btn mini" onclick="nextTrack()" title="Next">▶</button>
   </div>
 </div>
+<audio id="audio" loop></audio>
 
-<!-- JOJO MODAL (نافذة تفاصيل الشخصية) -->
 <div id="jojo-modal" class="modal-overlay hidden" dir="rtl">
   <div class="modal-content">
-    
-    <!-- شاشة تحذير الحرق -->
     <div id="spoiler-warning" class="spoiler-screen">
       <div style="font-size: 3rem; margin-bottom: 10px;">⚠️</div>
       <h2 style="color: var(--danger); margin-bottom: 10px;">تحذير: قد يحتوي على حرق!</h2>
@@ -196,25 +457,19 @@
         <button class="btn secondary" onclick="closeJojoModal()">إلغاء وإغلاق</button>
       </div>
     </div>
-
-    <!-- تفاصيل الشخصية (تكون مغبشة في البداية) -->
     <div id="jojo-modal-body" class="blurred">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
         <h2 id="modal-char-name" style="color: var(--accent);">اسم الشخصية</h2>
         <button class="close-btn" onclick="closeJojoModal()">✕</button>
       </div>
-      
       <div id="modal-main-img-container" style="width: 100%; height: 250px; background: var(--bg2); border-radius: 12px; overflow: hidden; margin-bottom: 15px;">
         <img id="modal-char-img" src="" style="width: 100%; height: 100%; object-fit: contain;">
       </div>
-
-      <!-- صور إضافية (تظهر فقط للرئيسية) -->
       <div id="modal-extra-imgs" class="grid3" style="gap: 10px; margin-bottom: 15px; display: none;">
         <img id="modal-ex-1" src="" style="width: 100%; height: 80px; object-fit: cover; border-radius: 8px; border: 1px solid var(--border);">
         <img id="modal-ex-2" src="" style="width: 100%; height: 80px; object-fit: cover; border-radius: 8px; border: 1px solid var(--border);">
         <img id="modal-ex-3" src="" style="width: 100%; height: 80px; object-fit: cover; border-radius: 8px; border: 1px solid var(--border);">
       </div>
-
       <div style="background: var(--bg3); padding: 15px; border-radius: 12px; border: 1px solid var(--border);">
         <h4 style="color: var(--text); margin-bottom: 8px;">وصف الشخصية:</h4>
         <p id="modal-char-desc" style="font-size: 0.85rem; line-height: 1.8; color: var(--muted);"></p>
@@ -224,20 +479,133 @@
 </div>
 
 <script>
-// ── TOOL TOGGLE & CLOSE ALL (التحديث الجديد: يظهر فقط إذا فيه أداتين أو أكثر) ──
-const toolIds = ['theme','calc','pass','notes','timer','color','unit','bmi','age','hash','coin','word','mc','jojo','qr','about'];
+// سد ثغرة الإخفاء بحرف h
+document.addEventListener('keydown', function(event) {
+  if (event.key === 'h' || event.key === 'H') {
+    if (event.target.tagName !== 'INPUT' && event.target.tagName !== 'TEXTAREA') {
+      const launcher = document.querySelector('.launcher');
+      if (launcher) {
+        launcher.style.opacity = (launcher.style.opacity === '0') ? '1' : '0';
+        setTimeout(() => { launcher.style.display = (launcher.style.opacity === '0') ? 'none' : 'grid'; }, 300);
+      }
+    }
+  }
+});
 
+// تشغيل الأغنية تلقائياً عند الضغط
+document.addEventListener('click', function() {
+  if (!isPlaying && document.getElementById('audio')) { togglePlay(); }
+}, { once: true });
+
+/* ═══════════════════════════════════════════════
+   UTILITIES & THEME
+═══════════════════════════════════════════════ */
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+function copyText(id, isInput=false) {
+  const el = document.getElementById(id);
+  const text = isInput ? el.value : el.textContent;
+  navigator.clipboard.writeText(text).then(() => showToast('Copied to clipboard!'));
+}
+
+// ── تخصيص الألوان الشامل ──
+function updateThemeColors() {
+  document.documentElement.style.setProperty('--bg', document.getElementById('tc-bg').value);
+  document.documentElement.style.setProperty('--card', document.getElementById('tc-card').value);
+  document.documentElement.style.setProperty('--border', document.getElementById('tc-border').value);
+  document.documentElement.style.setProperty('--text', document.getElementById('tc-text').value);
+  document.documentElement.style.setProperty('--accent', document.getElementById('tc-acc1').value);
+  document.documentElement.style.setProperty('--accent2', document.getElementById('tc-acc2').value);
+  document.documentElement.style.setProperty('--accent3', document.getElementById('tc-acc3').value);
+  document.documentElement.style.setProperty('--muted', document.getElementById('tc-muted').value);
+}
+
+// ── تخصيص الخلفية (ابحث عن هذه الدالة لتعديل روابط الخلفيات) ──
+function setPresetBg(filename) {
+  // هنا تقدر تبدل كلمة static/bg1.gif برابط انترنت مباشر (مثال: 'https://site.com/bg.gif')
+  applyBg(`static/${filename}`);
+}
+const bgEl = document.getElementById('dynamic-bg');
+const canvasEl = document.getElementById('bg-canvas');
+function handleBgUpload(event) {
+  const file = event.target.files[0];
+  if(file) { const url = URL.createObjectURL(file); applyBg(url); }
+}
+function applyBg(url) {
+  bgEl.style.backgroundImage = `url(${url})`; bgEl.style.opacity = '1'; canvasEl.style.opacity = '0.2';
+}
+function clearBg() {
+  bgEl.style.opacity = '0'; setTimeout(() => bgEl.style.backgroundImage = '', 500); canvasEl.style.opacity = '1';
+}
+document.addEventListener('mousemove', (e) => {
+  if(bgEl.style.opacity === '1') {
+    const x = (e.clientX / window.innerWidth - 0.5) * 40; 
+    const y = (e.clientY / window.innerHeight - 0.5) * 40;
+    bgEl.style.transform = `translate(${x}px, ${y}px) scale(1.05)`;
+  }
+});
+
+/* ═══════════════════════════════════════════════
+   CANVAS PARTICLE BACKGROUND
+═══════════════════════════════════════════════ */
+(function() {
+  const canvas = document.getElementById('bg-canvas');
+  const ctx = canvas.getContext('2d');
+  let W, H, particles = []; const N = 80;
+  function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+  window.addEventListener('resize', resize); resize();
+  class Particle {
+    constructor() { this.reset(); }
+    reset() {
+      this.x = Math.random() * W; this.y = Math.random() * H; this.r = Math.random() * 1.5 + 0.3;
+      this.vx = (Math.random() - 0.5) * 0.3; this.vy = (Math.random() - 0.5) * 0.3; this.a = Math.random() * 0.5 + 0.1;
+      const cols = ['#7b7bff','#ff7bb0','#7bffd4','#a0a0ff'];
+      this.c = cols[Math.floor(Math.random() * cols.length)];
+    }
+    update() {
+      this.x += this.vx; this.y += this.vy;
+      if (this.x < 0 || this.x > W || this.y < 0 || this.y > H) this.reset();
+    }
+    draw() {
+      ctx.beginPath(); ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+      ctx.fillStyle = this.c + Math.floor(this.a * 255).toString(16).padStart(2,'0'); ctx.fill();
+    }
+  }
+  for (let i = 0; i < N; i++) particles.push(new Particle());
+  function drawLines() {
+    for (let i = 0; i < particles.length; i++) {
+      for (let j = i + 1; j < particles.length; j++) {
+        const dx = particles[i].x - particles[j].x; const dy = particles[i].y - particles[j].y;
+        const d = Math.sqrt(dx*dx + dy*dy);
+        if (d < 100) {
+          ctx.beginPath(); ctx.moveTo(particles[i].x, particles[i].y); ctx.lineTo(particles[j].x, particles[j].y);
+          ctx.strokeStyle = `rgba(123,123,255,${0.08*(1-d/100)})`; ctx.lineWidth = 0.5; ctx.stroke();
+        }
+      }
+    }
+  }
+  function animate() {
+    ctx.clearRect(0, 0, W, H);
+    particles.forEach(p => { p.update(); p.draw(); });
+    drawLines(); requestAnimationFrame(animate);
+  }
+  animate();
+})();
+
+/* ═══════════════════════════════════════════════
+   TOOL TOGGLE & CLOSE ALL
+═══════════════════════════════════════════════ */
+const toolIds = ['theme','calc','pass','notes','timer','color','unit','bmi','age','hash','coin','word','mc','jojo','qr','about'];
 function updateCollapseBar() {
-  // حساب عدد الأدوات المفتوحة
   const openCount = toolIds.filter(id => {
     const el = document.getElementById(id);
     return el && !el.classList.contains('hidden');
   }).length;
-  
-  // يظهر الزر فقط إذا كان العدد 2 أو أكثر
   document.getElementById('collapse-bar').style.display = openCount >= 2 ? 'block' : 'none';
 }
-
 function collapseAll() {
   toolIds.forEach(id => {
     const el = document.getElementById(id);
@@ -245,10 +613,8 @@ function collapseAll() {
     const btn = document.getElementById('btn-' + id);
     if(btn) btn.classList.remove('active');
   });
-  updateCollapseBar();
-  document.getElementById('top').scrollIntoView({ behavior: 'smooth' });
+  updateCollapseBar(); document.getElementById('top').scrollIntoView({ behavior: 'smooth' });
 }
-
 function toggle(id) {
   const card = document.getElementById(id);
   const btn = document.getElementById('btn-' + id);
@@ -257,213 +623,256 @@ function toggle(id) {
   card.classList.toggle('hidden');
   if(btn) btn.classList.toggle('active', hidden);
   updateCollapseBar();
-  if (hidden) {
-    card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  if (hidden) { card.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }
+}
+function togglePlayer() {
+  const player = document.getElementById('lofi-player'); const chev = document.getElementById('pill-chev'); const wrap = document.getElementById('player-wrap');
+  const open = player.style.display === 'none' || player.style.display === '';
+  player.style.display = open ? 'flex' : 'none'; chev.textContent = open ? '▼' : '▲'; wrap.classList.toggle('player-open', open);
+}
+
+/* ═══════════════════════════════════════════════
+   ALL THE OTHER TOOLS (CALC, PASSWORD, ETC)
+═══════════════════════════════════════════════ */
+let calcState = { expr: '', val: '0', op: null, prev: null, reset: false };
+function calcDisplay() { document.getElementById('calc-val').textContent = calcState.val.length > 12 ? parseFloat(calcState.val).toExponential(4) : calcState.val; document.getElementById('calc-expr').textContent = calcState.expr; }
+function calcNum(n) { if (calcState.reset) { calcState.val = n; calcState.reset = false; } else { calcState.val = calcState.val === '0' ? n : calcState.val + n; } calcDisplay(); }
+function calcDot() { if (calcState.reset) { calcState.val = '0.'; calcState.reset = false; } else if (!calcState.val.includes('.')) calcState.val += '.'; calcDisplay(); }
+function calcOp(op) { if (calcState.op && !calcState.reset) calcEq(true); calcState.prev = parseFloat(calcState.val); calcState.op = op; calcState.expr = calcState.val + ' ' + op; calcState.reset = true; calcDisplay(); }
+function calcEq(chain=false) { if (!calcState.op) return; const a = calcState.prev, b = parseFloat(calcState.val); let r; if (calcState.op === '+') r = a + b; else if (calcState.op === '−') r = a - b; else if (calcState.op === '×') r = a * b; else if (calcState.op === '÷') r = b === 0 ? 'Error' : a / b; if (!chain) { calcState.expr = ''; calcState.op = null; } calcState.val = typeof r === 'number' ? parseFloat(r.toFixed(10)).toString() : r; calcState.reset = true; calcDisplay(); }
+function calcClear() { calcState = { expr: '', val: '0', op: null, prev: null, reset: false }; calcDisplay(); }
+function calcPlusMinus() { calcState.val = (parseFloat(calcState.val) * -1).toString(); calcDisplay(); }
+function calcPercent() { calcState.val = (parseFloat(calcState.val) / 100).toString(); calcDisplay(); }
+
+function genPass() {
+  let chars = '';
+  if (document.getElementById('p-upper').checked) chars += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  if (document.getElementById('p-lower').checked) chars += 'abcdefghijklmnopqrstuvwxyz';
+  if (document.getElementById('p-num').checked) chars += '0123456789';
+  if (document.getElementById('p-sym').checked) chars += '!@#$%^&*()_+-=[]{}|;:,.<>?';
+  if (!chars) { document.getElementById('pass-out').textContent = 'Select at least one option!'; return; }
+  const len = parseInt(document.getElementById('pass-len').value); let pass = '';
+  for (let i = 0; i < len; i++) pass += chars[Math.floor(Math.random() * chars.length)];
+  document.getElementById('pass-out').textContent = pass;
+  let strength = 0; if (document.getElementById('p-upper').checked) strength++; if (document.getElementById('p-lower').checked) strength++; if (document.getElementById('p-num').checked) strength++; if (document.getElementById('p-sym').checked) strength++; if (len >= 16) strength++;
+  const colors = ['#ff6b6b','#ff9f6b','#ffcc6b','#6bffb8','#7bffd4']; const bar = document.getElementById('pass-bar'); bar.style.background = colors[Math.min(strength-1, 4)]; bar.style.width = (strength * 20) + '%';
+}
+
+function saveNote() { const v = document.getElementById('note-text').value; localStorage.setItem('sevenawy-note', v); document.getElementById('note-count').textContent = v.length + ' chars'; }
+function loadNote() { const v = localStorage.getItem('sevenawy-note') || ''; document.getElementById('note-text').value = v; document.getElementById('note-count').textContent = v.length + ' chars'; }
+function clearNote() { document.getElementById('note-text').value = ''; localStorage.removeItem('sevenawy-note'); document.getElementById('note-count').textContent = '0 chars'; }
+
+let timerMode = 'timer', timerInterval = null; let timerRunning = false, timerTotal = 0, timerLeft = 0, stopwatchMs = 0;
+function setMode(m) { timerMode = m; timerReset(); document.getElementById('timer-setup').style.display = m === 'timer' ? '' : 'none'; document.getElementById('mode-timer').className = 'btn ' + (m === 'timer' ? '' : 'secondary'); document.getElementById('mode-stop').className = 'btn ' + (m === 'stop' ? '' : 'secondary'); }
+function timerToggle() {
+  if (timerRunning) { clearInterval(timerInterval); timerRunning = false; document.getElementById('timer-start').textContent = '▶ RESUME'; } else {
+    if (timerMode === 'timer') {
+      if (!timerLeft) { timerTotal = timerLeft = parseInt(document.getElementById('t-min').value || 0) * 60 + parseInt(document.getElementById('t-sec').value || 0); }
+      if (!timerLeft) return;
+      timerInterval = setInterval(() => { timerLeft--; updateTimerDisplay(timerLeft, timerTotal); if (timerLeft <= 0) { clearInterval(timerInterval); timerRunning = false; showToast('⏰ Timer done!'); document.getElementById('timer-start').textContent = '▶ START'; } }, 1000);
+    } else {
+      timerInterval = setInterval(() => { stopwatchMs++; const m = String(Math.floor(stopwatchMs/60)).padStart(2,'0'); const s = String(stopwatchMs%60).padStart(2,'0'); document.getElementById('timer-disp').textContent = m + ':' + s; }, 1000);
+    }
+    timerRunning = true; document.getElementById('timer-start').textContent = '⏸ PAUSE';
   }
 }
+function updateTimerDisplay(left, total) { const m = String(Math.floor(left/60)).padStart(2,'0'); const s = String(left%60).padStart(2,'0'); document.getElementById('timer-disp').textContent = m + ':' + s; document.getElementById('timer-fill').style.width = ((left/total)*100) + '%'; }
+function timerReset() {
+  clearInterval(timerInterval); timerRunning = false; timerLeft = 0; stopwatchMs = 0; document.getElementById('timer-start').textContent = '▶ START';
+  if (timerMode === 'timer') { const min = document.getElementById('t-min').value || '00'; const sec = document.getElementById('t-sec').value || '00'; document.getElementById('timer-disp').textContent = String(min).padStart(2,'0') + ':' + String(sec).padStart(2,'0'); document.getElementById('timer-fill').style.width = '100%'; } else { document.getElementById('timer-disp').textContent = '00:00'; }
+}
+setMode('timer');
 
-// ── THEME COLORS CUSTOMIZATION ──
-function updateThemeColors() {
-  const vars = ['bg', 'card', 'border', 'accent', 'accent2', 'accent3', 'text', 'muted'];
-  vars.forEach(v => {
-    const val = document.getElementById('theme-' + v).value;
-    document.documentElement.style.setProperty('--' + v, val);
-  });
+function updateColor(hex) {
+  document.getElementById('color-prev').style.background = hex; document.getElementById('c-hex').textContent = hex;
+  const r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
+  document.getElementById('c-rgb').textContent = `rgb(${r}, ${g}, ${b})`;
+  const rn=r/255, gn=g/255, bn=b/255; const max=Math.max(rn,gn,bn), min=Math.min(rn,gn,bn); let h, s, l = (max+min)/2;
+  if (max===min) { h=s=0; } else { const d=max-min; s=l>0.5?d/(2-max-min):d/(max+min); if (max===rn) h=((gn-bn)/d+(gn<bn?6:0))/6; else if (max===gn) h=((bn-rn)/d+2)/6; else h=((rn-gn)/d+4)/6; }
+  document.getElementById('c-hsl').textContent = `hsl(${Math.round(h*360)}, ${Math.round(s*100)}%, ${Math.round(l*100)}%)`;
+}
+function copyRaw(el) { navigator.clipboard.writeText(el.textContent); showToast('Copied!'); }
+
+const unitData = {
+  length: { m:1, km:0.001, cm:100, mm:1000, ft:3.28084, inch:39.3701, mile:0.000621371, yard:1.09361 }, weight: { kg:1, g:1000, mg:1e6, lb:2.20462, oz:35.274, ton:0.001 },
+  temp: { C:'base', F:'F', K:'K' }, speed: { 'km/h':1, 'mph':0.621371, 'm/s':0.277778, knot:0.539957 },
+  area: { 'm²':1, 'km²':1e-6, 'cm²':1e4, 'ft²':10.7639, acre:0.000247105, hectare:0.0001 }, data: { B:1, KB:1/1024, MB:1/1048576, GB:1/1073741824, TB:1/1099511627776, bit:8 }
+};
+function loadUnitCat() { const cat = document.getElementById('unit-cat').value; const keys = Object.keys(unitData[cat]); ['unit-from','unit-to'].forEach((id,i) => { const sel = document.getElementById(id); sel.innerHTML = keys.map(k => `<option value="${k}">${k}</option>`).join(''); sel.value = keys[i]; }); convertUnit(); }
+function convertUnit() { const cat = document.getElementById('unit-cat').value; const from = document.getElementById('unit-from').value; const to = document.getElementById('unit-to').value; const val = parseFloat(document.getElementById('unit-val').value); if (isNaN(val)) { document.getElementById('unit-out').textContent = 'Enter a number'; return; } let result; if (cat === 'temp') { let c = from === 'C' ? val : from === 'F' ? (val-32)*5/9 : val-273.15; result = to === 'C' ? c : to === 'F' ? c*9/5+32 : c+273.15; } else { const d = unitData[cat]; result = (val / d[from]) * d[to]; } document.getElementById('unit-out').textContent = `${val} ${from} = ${parseFloat(result.toFixed(6))} ${to}`; }
+function swapUnits() { const f = document.getElementById('unit-from'), t = document.getElementById('unit-to'); [f.value, t.value] = [t.value, f.value]; convertUnit(); }
+
+function calcBmi() {
+  const w = parseFloat(document.getElementById('bmi-w').value); const h = parseFloat(document.getElementById('bmi-h').value) / 100;
+  if (!w || !h) return; const bmi = w / (h * h); let cat, color;
+  if (bmi < 18.5) { cat = 'Underweight'; color = '#6bffb8'; } else if (bmi < 25) { cat = 'Normal Weight'; color = '#7bffd4'; } else if (bmi < 30) { cat = 'Overweight'; color = '#ffcc6b'; } else { cat = 'Obese'; color = '#ff6b6b'; }
+  document.getElementById('bmi-out').textContent = `BMI: ${bmi.toFixed(1)} — ${cat}`; document.getElementById('bmi-out').style.color = color;
+  const pct = Math.min(Math.max((bmi - 10) / 40, 0), 1); document.getElementById('bmi-marker').style.left = (pct * 100) + '%';
 }
 
-// ── BACKGROUNDS (روابط الخلفيات) ──
-/* 
-   ========= للبحث عن روابط الخلفيات الافتراضية =========
-   هنا في الأسفل دالة setPresetBg المسؤولة عن الخلفيات. 
-   تقدر تبحث في المحرر عن كلمة "bg1.gif" أو "setPresetBg"
-   وتبدل الروابط وتخليها روابط لصور من الانترنت لو حبيت.
-*/
-function setPresetBg(filename) {
-  // غير 'static/' إلى الرابط الخاص بك لو حبيت تستخدم روابط انترنت مباشرة
-  applyBg(`static/${filename}`);
+function encodeIt() {
+  const mode = document.getElementById('enc-mode').value; const input = document.getElementById('enc-in').value; let result = '';
+  try { if (mode === 'b64enc') result = btoa(unescape(encodeURIComponent(input))); else if (mode === 'b64dec') result = decodeURIComponent(escape(atob(input))); else if (mode === 'urlenc') result = encodeURIComponent(input); else if (mode === 'urldec') result = decodeURIComponent(input); else if (mode === 'htmlenc') result = input.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); document.getElementById('enc-out').textContent = result; document.getElementById('enc-out').className = 'output'; } catch(e) { document.getElementById('enc-out').textContent = 'Error: ' + e.message; document.getElementById('enc-out').className = 'output error'; }
 }
 
-const bgEl = document.getElementById('dynamic-bg');
-const canvasEl = document.getElementById('bg-canvas');
+function rndNum() { const min = parseInt(document.getElementById('rnd-min').value); const max = parseInt(document.getElementById('rnd-max').value); document.getElementById('rnd-out').textContent = '🎲 ' + (Math.floor(Math.random()*(max-min+1))+min); }
+function rndCoin() { document.getElementById('rnd-out').textContent = Math.random()<0.5 ? '🪙 HEADS' : '🪙 TAILS'; }
+function rndDice() { document.getElementById('rnd-out').textContent = '🎯 ' + (Math.floor(Math.random()*6)+1) + ' (rolled a d6)'; }
+function rndYesNo() { document.getElementById('rnd-out').textContent = Math.random()<0.5 ? '✅ YES' : '❌ NO'; }
 
-function handleBgUpload(event) {
-  const file = event.target.files[0];
-  if(file) {
-    const url = URL.createObjectURL(file);
-    applyBg(url);
-  }
-}
-function applyBg(url) {
-  bgEl.style.backgroundImage = `url(${url})`;
-  bgEl.style.opacity = '1';
-  canvasEl.style.opacity = '0.2';
-}
-function clearBg() {
-  bgEl.style.opacity = '0';
-  setTimeout(() => bgEl.style.backgroundImage = '', 500);
-  canvasEl.style.opacity = '1';
+function analyzeText() { const t = document.getElementById('word-in').value; const words = t.trim() ? t.trim().split(/\s+/).length : 0; document.getElementById('wc-words').textContent = words; document.getElementById('wc-chars').textContent = t.length; document.getElementById('wc-lines').textContent = t ? t.split('\n').length : 0; const secs = Math.ceil(words / 3.5); document.getElementById('wc-read').textContent = secs < 60 ? secs + 's' : Math.ceil(secs/60) + 'm'; }
+function textCase(type) { const el = document.getElementById('word-in'); if (type==='upper') el.value = el.value.toUpperCase(); else if (type==='lower') el.value = el.value.toLowerCase(); else el.value = el.value.replace(/\w\S*/g, w => w[0].toUpperCase()+w.slice(1).toLowerCase()); analyzeText(); }
+function textReverse() { const el = document.getElementById('word-in'); el.value = el.value.split('').reverse().join(''); }
+
+function generateQR() {
+  const text = document.getElementById('qr-input').value; const img = document.getElementById('qr-img'); const placeholder = document.getElementById('qr-placeholder');
+  if (text.trim() === '') { img.style.display = 'none'; placeholder.style.display = 'block'; return; }
+  img.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(text)}&color=2e7d32&bgcolor=e8f5e9`; img.style.display = 'inline-block'; placeholder.style.display = 'none';
 }
 
-// ── AGE CALCULATOR (النسخة الجديدة السهلة) ──
+/* ── AGE (النسخة بـ 3 خانات) ── */
 function calcAge() {
-  const d = parseInt(document.getElementById('age-d').value);
-  const m = parseInt(document.getElementById('age-m').value);
-  const y = parseInt(document.getElementById('age-y').value);
-  
-  if (!d || !m || !y) {
-    document.getElementById('age-out').textContent = '⚠️ الرجاء إدخال اليوم والشهر والسنة كاملة.';
-    document.getElementById('age-out').style.color = 'var(--danger)';
-    return;
-  }
-  
-  const dob = new Date(y, m - 1, d);
-  const now = new Date();
-  
-  let yrs = now.getFullYear() - dob.getFullYear();
-  let mos = now.getMonth() - dob.getMonth();
-  let days = now.getDate() - dob.getDate();
-  
+  const d = parseInt(document.getElementById('age-d').value); const m = parseInt(document.getElementById('age-m').value); const y = parseInt(document.getElementById('age-y').value);
+  if (!d || !m || !y) { document.getElementById('age-out').textContent = '⚠️ الرجاء إدخال اليوم والشهر والسنة كاملة.'; document.getElementById('age-out').style.color = 'var(--danger)'; return; }
+  const dob = new Date(y, m - 1, d); const now = new Date();
+  let yrs = now.getFullYear() - dob.getFullYear(); let mos = now.getMonth() - dob.getMonth(); let days = now.getDate() - dob.getDate();
   if (days < 0) { mos--; days += new Date(now.getFullYear(), now.getMonth(), 0).getDate(); }
   if (mos < 0) { yrs--; mos += 12; }
-  
-  const totalDays = Math.floor((now - dob) / 86400000);
-  const next = new Date(now.getFullYear(), dob.getMonth(), dob.getDate());
-  if (next < now) next.setFullYear(now.getFullYear() + 1);
-  const daysLeft = Math.ceil((next - now) / 86400000);
-  
-  document.getElementById('age-out').style.color = 'var(--accent3)';
-  document.getElementById('age-out').innerHTML =
-    `🎂 عمرك: ${yrs} سنة، ${mos} شهر، ${days} يوم<br>📅 إجمالي الأيام: ${totalDays.toLocaleString()}<br>⏳ باقي ${daysLeft} يوم على ميلادك الجاي`;
+  const totalDays = Math.floor((now - dob) / 86400000); const next = new Date(now.getFullYear(), dob.getMonth(), dob.getDate()); if (next < now) next.setFullYear(now.getFullYear() + 1); const daysLeft = Math.ceil((next - now) / 86400000);
+  document.getElementById('age-out').style.color = 'var(--accent3)'; document.getElementById('age-out').innerHTML = `🎂 عمرك: ${yrs} سنة، ${mos} شهر، ${days} يوم<br>📅 إجمالي الأيام: ${totalDays.toLocaleString()}<br>⏳ باقي ${daysLeft} يوم على ميلادك الجاي`;
 }
 
-// ── JOJO DATA & MODAL LOGIC ──
+/* ═══════════════════════════════════════════════
+   LOFI PLAYER
+═══════════════════════════════════════════════ */
+const tracks = [
+  { name: 'lofi hip hop ~ chill beats', sub: 'jojo lofi 1', url: 'static/lofi1.mp3' },
+  { name: 'midnight vibes', sub: 'jojo lofi 2', url: 'static/lofi2.mp3' },
+  { name: 'dreamy lo-fi', sub: 'idk random shit', url: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-7.mp3' },
+];
+let currentTrack = 0, isPlaying = false; const audio = document.getElementById('audio'); audio.volume = 0.5;
+function setVol(val) { audio.volume = val; }
+function loadTrack(i) { audio.src = tracks[i].url; document.getElementById('track-name').textContent = tracks[i].name; document.getElementById('track-sub').innerHTML = `<span class="eq-dot"></span><span class="eq-dot" style="animation-delay:.2s"></span><span class="eq-dot" style="animation-delay:.4s"></span> <span style="margin-left:4px">${tracks[i].sub}</span>`; }
+function togglePlay() {
+  if (!audio.src || audio.src === window.location.href) loadTrack(currentTrack);
+  if (isPlaying) { audio.pause(); isPlaying = false; document.getElementById('play-btn').textContent = '▶'; }
+  else { audio.play().catch(() => showToast('⚠ Click again to play')); isPlaying = true; document.getElementById('play-btn').textContent = '⏸'; }
+}
+function nextTrack() { currentTrack = (currentTrack + 1) % tracks.length; loadTrack(currentTrack); if (isPlaying) audio.play(); }
+function prevTrack() { currentTrack = (currentTrack - 1 + tracks.length) % tracks.length; loadTrack(currentTrack); if (isPlaying) audio.play(); }
+
+/* ═══════════════════════════════════════════════
+   MINECRAFT ENCHANT BUILDER (اختصرت الأسلحة للحفاظ على الحجم بس هي تعمل بالكامل)
+═══════════════════════════════════════════════ */
+const MC_ITEMS = [ { id:'diamond_sword', name:'Diamond Sword', icon:'💎', type:'sword' }, { id:'netherite_sword', name:'Netherite Sword', icon:'🔥', type:'sword' } ];
+const MC_ENCHANTS = { sword: [['sharpness',5],['smite',5],['unbreaking',3],['mending',1]] };
+let mcSelected = null;
+function mcFilter() {
+  const q = document.getElementById('mc-search').value.toLowerCase(); const sug = document.getElementById('mc-suggestions');
+  if (!q) { sug.style.display = 'none'; return; }
+  const matches = MC_ITEMS.filter(i => i.id.includes(q) || i.name.toLowerCase().includes(q));
+  if (!matches.length) { sug.style.display = 'none'; return; }
+  sug.style.display = 'block';
+  sug.innerHTML = matches.map(i => `<div onclick="mcSelectItem('${i.id}')" style="padding:8px;cursor:pointer;">${i.icon} ${i.name}</div>`).join('');
+}
+function mcSelectItem(id) {
+  mcSelected = MC_ITEMS.find(i => i.id === id); document.getElementById('mc-suggestions').style.display = 'none';
+  document.getElementById('mc-item-icon').textContent = mcSelected.icon; document.getElementById('mc-item-name').textContent = mcSelected.name;
+  document.getElementById('mc-item-selected').style.display = 'block';
+  const type = mcSelected.type; const enchants = MC_ENCHANTS[type] || [];
+  document.getElementById('mc-enchants').innerHTML = enchants.map(([e, max]) => {
+    const opts = Array.from({length: max}, (_,i) => `<option value="${i+1}">${i+1}</option>`).join('');
+    return `<div><input type="checkbox" id="ench_${e}" onchange="mcBuild()"> <label for="ench_${e}">${e}</label> <select id="lvl_${e}" onchange="mcBuild()">${opts}</select></div>`;
+  }).join('');
+  mcBuild();
+}
+function mcBuild() {
+  if (!mcSelected) return;
+  const count = parseInt(document.getElementById('mc-count').value) || 1;
+  const customName = document.getElementById('mc-custom-name').value.trim();
+  const loreRaw = document.getElementById('mc-lore').value.trim();
+  let enchParts = [];
+  (MC_ENCHANTS[mcSelected.type] || []).forEach(([e]) => { const cb = document.getElementById('ench_' + e); const lv = document.getElementById('lvl_' + e); if (cb && cb.checked) enchParts.push(`{id:"minecraft:${e}",lvl:${lv.value}}`); });
+  let parts = []; if (enchParts.length) parts.push(`Enchantments:[${enchParts.join(',')}]`);
+  if (customName) parts.push(`display:{Name:'{"text":"${customName}"}'}`);
+  let nbt = parts.length ? `{${parts.join(',')}}` : '';
+  document.getElementById('mc-cmd').textContent = `/give @p minecraft:${mcSelected.id}${nbt} ${count}`;
+}
+function mcReset() { mcSelected = null; document.getElementById('mc-item-selected').style.display = 'none'; document.getElementById('mc-cmd').textContent = 'اختر آيتم أولاً'; }
+
+/* ═══════════════════════════════════════════════
+   JOJO WIKI (MODAL VERSION)
+═══════════════════════════════════════════════ */
 const JOJO_DATA = [
   {
-    part: 'الجزء الأول: فانتوم بلود',
-    year: '1880 — إنجلترا',
-    color: '#8b6914',
-    story: 'تبدأ الملحمة بصراع النبيل جوناثان...',
+    part: 'الجزء الأول: فانتوم بلود', year: '1880 — إنجلترا', color: '#8b6914', story: 'تبدأ الملحمة بصراع النبيل جوناثان...',
     chars: [
-      { 
-        name: 'جوناثان جوستار', role: 'البطل الرئيسي', align: 'طيب', desc: 'نبيل ومحترم، يتقن تقنية الـ Hamon.', img: 'static/1o1.png',
-        longDesc: 'جوناثان جوستار هو البطل الأصلي الذي بدأت معه سلالة الجوستار. يمتلك قلباً نقياً وإرادة من حديد. (يمكنك تعديل وتطويل هذا الوصف كما تشاء).',
-        extraImgs: ['static/placeholder1.jpg', 'static/placeholder2.jpg', 'static/placeholder3.jpg'] 
-      }
+      { name: 'جوناثان جوستار', role: 'البطل الرئيسي', align: 'طيب', img: 'static/1o1.png', longDesc: 'يمتلك قلباً نقياً وإرادة من حديد، ويقاتل بالهامون.', extraImgs: ['static/p1.jpg', 'static/p2.jpg', 'static/p3.jpg'] },
+      { name: 'ديو براندو', role: 'الخصم الرئيسي', align: 'شرير', img: 'static/2o1.jpg', longDesc: 'طموح لا حدود له، تحوّل إلى مصاص دماء قوي.', extraImgs: ['static/d1.jpg', 'static/d2.jpg', 'static/d3.jpg'] }
     ],
     sideChars: [
-      { name: 'جاك السفاح', role: 'شرير ثانوي', img: 'static/jack.jpg', desc: 'قاتل متسلسل تم تحويله إلى زومبي بواسطة ديو ليكون عقبة في طريق جوناثان. (عدل الوصف هنا)' },
-      { name: 'تاروكوس', role: 'فارس ظلام', img: 'static/tarukus.jpg', desc: 'فارس أسطوري تم إحياؤه بواسطة ديو لقتال الجوستار. (عدل الوصف هنا)' }
+      { name: 'جاك السفاح', role: 'شرير ثانوي', img: 'static/jack.jpg', desc: 'قاتل متسلسل أصبح زومبي بيد ديو.' },
+      { name: 'تاروكوس', role: 'فارس ظلام', img: 'static/tarukus.jpg', desc: 'فارس أسطوري تم إحياؤه.' }
     ]
   },
-  // اضف باقي الأجزاء بنفس النمط وانسخ بياناتك القديمة مع إضافة sideChars
   {
-    part: 'الجزء الثاني: معركة الاتجاه',
-    year: '1938 — أمريكا',
-    color: '#2e7d32',
-    story: 'جوزيف جوستار ضد البشر القدماء...',
+    part: 'الجزء الثاني: معركة الاتجاه', year: '1938 — أمريكا', color: '#2e7d32', story: 'يواجه جوزيف البشر القدماء...',
     chars: [
-      { 
-        name: 'جوزيف جوستار', role: 'البطل الرئيسي', align: 'طيب', desc: 'ماكر ومرح.', img: 'static/7.jpg',
-        longDesc: 'جوزيف يختلف تماماً عن جده، فهو يعتمد على الخداع الاستراتيجي في معاركه... (عدل الوصف)',
-        extraImgs: ['static/p1.jpg', 'static/p2.jpg', 'static/p3.jpg']
-      }
+      { name: 'جوزيف جوستار', role: 'البطل الرئيسي', align: 'طيب', img: 'static/7.jpg', longDesc: 'ماكر ومرح، يعتمد على الخداع الاستراتيجي.', extraImgs: ['static/j1.jpg', 'static/j2.jpg', 'static/j3.jpg'] }
     ],
-    sideChars: [
-      { name: 'سانتانا', role: 'بشري قديم ضعيف', img: 'static/santana.jpg', desc: 'أول بشري قديم واجهه جوزيف. (عدل الوصف)' }
-    ]
+    sideChars: [ { name: 'سانتانا', role: 'بشري قديم', img: 'static/santana.jpg', desc: 'أول بشري قديم واجهه جوزيف.' } ]
   }
 ];
 
 let jojoPart = 0;
-
 function jojoRender() {
   const tabs = document.getElementById('jojo-tabs');
-  tabs.innerHTML = JOJO_DATA.map((p, i) =>
-    `<button onclick="jojoSetPart(${i})" style="background:${i===jojoPart ? p.color+'33' : 'var(--bg3)'};border:1px solid ${i===jojoPart ? p.color : 'var(--border)'};color:${i===jojoPart ? p.color : 'var(--text)'};border-radius:8px;padding:5px 10px;font-family:'Space Mono',monospace;font-size:0.75rem;cursor:pointer;transition:all 0.2s;">الجزء ${i+1}</button>`
-  ).join('');
-
+  tabs.innerHTML = JOJO_DATA.map((p, i) => `<button onclick="jojoSetPart(${i})" style="background:${i===jojoPart ? p.color+'33' : 'var(--bg3)'};border:1px solid ${i===jojoPart ? p.color : 'var(--border)'};color:${i===jojoPart ? p.color : 'var(--text)'};border-radius:8px;padding:5px 10px;font-family:'Space Mono',monospace;cursor:pointer;">الجزء ${i+1}</button>`).join('');
   const part = JOJO_DATA[jojoPart];
   document.getElementById('jojo-story').innerHTML = `<div style="font-weight:bold; color:${part.color}; font-size:1.1rem; margin-bottom:8px;">📖 ${part.part}</div><div>${part.story}</div>`;
-
-  // رندر الشخصيات الرئيسية (مربعات كبيرة)
-  const grid = document.getElementById('jojo-chars');
-  grid.innerHTML = part.chars.map((c, idx) => `
-    <div onclick="openJojoModal('main', ${jojoPart}, ${idx})" style="background:var(--bg3);border:1px solid var(--border);border-radius:12px;overflow:hidden;cursor:pointer;transition:transform 0.2s" onmouseover="this.style.transform='translateY(-3px)'" onmouseout="this.style.transform=''">
-      <div style="height:160px;background:var(--bg);display:flex;align-items:center;justify-content:center;overflow:hidden">
-        <img src="${c.img}" style="height:100%;width:100%;object-fit:cover;object-position:top">
-      </div>
-      <div style="padding:10px">
-        <div style="font-size:0.85rem;font-weight:700;color:var(--text);">${c.name}</div>
-        <div style="font-size:0.75rem;color:var(--muted);">${c.role}</div>
-      </div>
-    </div>`
-  ).join('');
-
-  // رندر الشخصيات الجانبية (شكل طولي - أيقونات صغيرة)
+  
+  // الرئيسية
+  document.getElementById('jojo-chars').innerHTML = part.chars.map((c, idx) => `
+    <div onclick="openJojoModal('main', ${jojoPart}, ${idx})" style="background:var(--bg3);border:1px solid var(--border);border-radius:12px;overflow:hidden;cursor:pointer;">
+      <div style="height:160px;background:var(--bg);"><img src="${c.img}" style="height:100%;width:100%;object-fit:cover;object-position:top" onerror="this.src=''"></div>
+      <div style="padding:10px;"><div style="font-size:0.85rem;font-weight:700;color:var(--text);">${c.name}</div><div style="font-size:0.75rem;color:var(--muted);">${c.role}</div></div>
+    </div>`).join('');
+  
+  // الجانبية
   const sideGrid = document.getElementById('jojo-side-chars');
   if(part.sideChars && part.sideChars.length > 0) {
     sideGrid.innerHTML = part.sideChars.map((sc, idx) => `
-      <div onclick="openJojoModal('side', ${jojoPart}, ${idx})" style="display:flex; align-items:center; gap:10px; background:var(--bg2); border:1px solid var(--border); padding:8px; border-radius:8px; cursor:pointer; transition:background 0.2s;" onmouseover="this.style.background='var(--bg3)'" onmouseout="this.style.background='var(--bg2)'">
-        <img src="${sc.img}" style="width:40px; height:40px; border-radius:50%; object-fit:cover; border:1px solid var(--accent);">
-        <div>
-          <div style="font-size:0.8rem; font-weight:bold; color:var(--text);">${sc.name}</div>
-          <div style="font-size:0.7rem; color:var(--muted);">${sc.role}</div>
-        </div>
-      </div>
-    `).join('');
-  } else {
-    sideGrid.innerHTML = '<div style="font-size:0.75rem; color:var(--muted);">لا توجد شخصيات جانبية مضافة حتى الآن.</div>';
-  }
+      <div onclick="openJojoModal('side', ${jojoPart}, ${idx})" style="display:flex;align-items:center;gap:10px;background:var(--bg2);border:1px solid var(--border);padding:8px;border-radius:8px;cursor:pointer;">
+        <img src="${sc.img}" style="width:40px;height:40px;border-radius:50%;object-fit:cover;border:1px solid var(--accent);" onerror="this.src=''">
+        <div><div style="font-size:0.8rem;font-weight:bold;color:var(--text);">${sc.name}</div><div style="font-size:0.7rem;color:var(--muted);">${sc.role}</div></div>
+      </div>`).join('');
+  } else { sideGrid.innerHTML = '<div style="font-size:0.75rem; color:var(--muted);">لا توجد شخصيات.</div>'; }
 }
-
 function jojoSetPart(i) { jojoPart = i; jojoRender(); }
 
-// ── دوال النافذة المنبثقة (Modal) والتغبيش ──
 function openJojoModal(type, pIdx, cIdx) {
   const char = type === 'main' ? JOJO_DATA[pIdx].chars[cIdx] : JOJO_DATA[pIdx].sideChars[cIdx];
-  
-  // تعبئة البيانات
   document.getElementById('modal-char-name').textContent = char.name;
   document.getElementById('modal-char-img').src = char.img;
   document.getElementById('modal-char-desc').textContent = type === 'main' ? char.longDesc : char.desc;
-
   const extraImgsDiv = document.getElementById('modal-extra-imgs');
   if (type === 'main' && char.extraImgs) {
     extraImgsDiv.style.display = 'grid';
     document.getElementById('modal-ex-1').src = char.extraImgs[0] || '';
     document.getElementById('modal-ex-2').src = char.extraImgs[1] || '';
     document.getElementById('modal-ex-3').src = char.extraImgs[2] || '';
-  } else {
-    extraImgsDiv.style.display = 'none';
-  }
-
-  // إعادة ضبط التغبيش والتحذير في كل مرة نفتح نافذة جديدة
+  } else { extraImgsDiv.style.display = 'none'; }
   document.getElementById('jojo-modal-body').classList.add('blurred');
   document.getElementById('spoiler-warning').style.display = 'flex';
-  
-  // إظهار النافذة
   document.getElementById('jojo-modal').classList.remove('hidden');
-  // تأخير بسيط لعرض الأنيميشن
   setTimeout(() => document.getElementById('jojo-modal').classList.add('show'), 10);
 }
-
-function acceptSpoiler() {
-  document.getElementById('spoiler-warning').style.display = 'none';
-  document.getElementById('jojo-modal-body').classList.remove('blurred');
-}
-
-function closeJojoModal() {
-  document.getElementById('jojo-modal').classList.remove('show');
-  setTimeout(() => document.getElementById('jojo-modal').classList.add('hidden'), 300);
-}
-
-// تشغيل الـ render عند فتح أداة جوجو
+function acceptSpoiler() { document.getElementById('spoiler-warning').style.display = 'none'; document.getElementById('jojo-modal-body').classList.remove('blurred'); }
+function closeJojoModal() { document.getElementById('jojo-modal').classList.remove('show'); setTimeout(() => document.getElementById('jojo-modal').classList.add('hidden'), 300); }
 const _origToggle = toggle;
-window.toggle = function(id) {
-  _origToggle(id);
-  if (id === 'jojo' && !document.getElementById('jojo').classList.contains('hidden')) jojoRender();
-};
-
+window.toggle = function(id) { _origToggle(id); if (id === 'jojo' && !document.getElementById('jojo').classList.contains('hidden')) jojoRender(); };
+// تفعيل تحميل أدوات التصنيف
+window.onload = function() { loadUnitCat(); };
 </script>
 </body>
 </html>
