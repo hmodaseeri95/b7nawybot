@@ -7,10 +7,11 @@
   --bg3: #18181f;
   --card: #13131a;
   --border: #2a2a3a;
-  --border-glow: #4a4aff44;
-  --accent: #7b7bff;
-  --accent2: #ff7bb0;
-  --accent3: #7bffd4;
+  --border-glow: #2e7d3244;
+  /* الألوان الأساسية تعدلت لدرجات الأخضر حسب طلبك */
+  --accent: #2e7d32;
+  --accent2: #4caf50;
+  --accent3: #81c784;
   --text: #e8e8f5;
   --muted: #7070a0;
   --danger: #ff6b6b;
