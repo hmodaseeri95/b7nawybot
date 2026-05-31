@@ -23,49 +23,952 @@
 /* ── التنسيقات الأساسية ── */
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
-body { background: var(--bg); color: var(--text); font-family: 'Space Mono', monospace; min-height: 100vh; overflow-x: hidden; }
+body { 
+  background: var(--bg); 
+  color: var(--text); 
+  font-family: 'Space Mono', monospace; 
+  min-height: 100vh; 
+  overflow-x: hidden; 
+  line-height: 1.6;
+}
 
-/* ── الخلفية الديناميكية والكانفاس (من الكود الأول والثاني) ── */
-#bg-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; transition: opacity 0.3s; }
-#dynamic-bg { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-size: cover; background-position: center; z-index: 1; pointer-events: none; transform: scale(1.05); opacity: 0; transition: opacity 0.5s ease; }
-#dynamic-bg::after { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(10, 10, 15, 0.75); }
+/* ── الخلفية الديناميكية والكانفاس ── */
+#bg-canvas { 
+  position: fixed; 
+  top: 0; 
+  left: 0; 
+  width: 100%; 
+  height: 100%; 
+  z-index: 0; 
+  pointer-events: none; 
+  transition: opacity 0.3s; 
+}
+
+#dynamic-bg { 
+  position: fixed; 
+  top: 0; 
+  left: 0; 
+  width: 100vw; 
+  height: 100vh; 
+  background-size: cover; 
+  background-position: center; 
+  z-index: 1; 
+  pointer-events: none; 
+  opacity: 0; 
+  transition: opacity 0.5s;
+}
+
+#dynamic-bg::after { 
+  content: ""; 
+  position: absolute; 
+  top: 0; 
+  left: 0; 
+  width: 100%; 
+  height: 100%; 
+  background: rgba(10, 10, 15, 0.75); 
+}
+
+/* ── Toast Notification ── */
+.toast {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%) translateY(120px);
+  background: var(--accent);
+  color: #fff;
+  padding: 12px 24px;
+  border-radius: 50px;
+  font-size: 0.85rem;
+  z-index: 10000;
+  transition: transform 0.3s;
+  pointer-events: none;
+}
+
+.toast.show {
+  transform: translateX(-50%) translateY(0);
+}
 
 /* ── الهيكل (Layout) ── */
-.app { position: relative; z-index: 10; max-width: 820px; margin: 0 auto; padding: 24px 16px 120px; }
-.site-header { text-align: center; padding: 48px 0 32px; }
-.site-header h1 { font-family: 'Syne', sans-serif; font-size: clamp(2.2rem, 6vw, 4rem); font-weight: 800; letter-spacing: 0.18em; background: linear-gradient(135deg, var(--accent), var(--accent2), var(--accent3)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 8px; }
-.site-header p { color: var(--muted); font-size: 0.8rem; letter-spacing: 0.1em; }
+.app { 
+  position: relative; 
+  z-index: 10; 
+  max-width: 820px; 
+  margin: 0 auto; 
+  padding: 24px 16px 120px; 
+}
 
-/* ── الأزرار والشبكات (الدمج الكامل) ── */
-.launcher { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 10px; margin-bottom: 28px; }
-.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-.launch-btn { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 16px 10px; color: var(--text); font-size: 0.7rem; cursor: pointer; transition: all 0.2s; display: flex; flex-direction: column; align-items: center; gap: 10px; text-transform: uppercase; }
-.launch-btn:hover { border-color: var(--accent); background: var(--bg2); transform: translateY(-2px); box-shadow: 0 8px 24px var(--border-glow); }
+.site-header { 
+  text-align: center; 
+  padding: 48px 0 32px; 
+  margin-bottom: 24px;
+}
 
-/* ── نافذة المودال (Jojo Modal - من الكود الثاني) ── */
-.modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); z-index: 9999; display: flex; justify-content: center; align-items: center; opacity: 0; pointer-events: none; transition: opacity 0.3s ease; }
-.modal-overlay.show { opacity: 1; pointer-events: auto; }
-.modal-content { background: var(--bg); border: 1px solid var(--accent); border-radius: 16px; width: 90%; max-width: 500px; padding: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.5); }
+.site-header h1 { 
+  font-family: 'Syne', sans-serif; 
+  font-size: clamp(2.2rem, 6vw, 4rem); 
+  font-weight: 800; 
+  letter-spacing: 0.18em; 
+  background: linear-gradient(135deg, var(--accent), var(--accent2), var(--accent3)); 
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 8px;
+}
 
-/* ── المشغل التفاعلي (Player - Glassmorphism) ── */
-.player-pill { background: rgba(19, 26, 19, 0.6); backdrop-filter: blur(12px); border: 1px solid var(--accent); border-radius: 50px; padding: 8px 18px; display: flex; align-items: center; gap: 10px; cursor: pointer; transition: all 0.3s; }
-.player { background: rgba(19, 26, 19, 0.85); backdrop-filter: blur(15px); border: 1px solid var(--border); border-radius: 20px; padding: 12px 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.8); }
+.site-header p { 
+  color: var(--muted); 
+  font-size: 0.8rem; 
+  letter-spacing: 0.1em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
 
-/* ── أدوات التحكم والمدخلات (دمج كامل) ── */
-input, textarea, select { background: var(--bg3); border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--text); padding: 10px 14px; width: 100%; outline: none; }
-.btn { background: var(--accent); color: #fff; border: none; border-radius: var(--radius-sm); padding: 10px 20px; font-weight: 700; cursor: pointer; text-transform: uppercase; transition: all 0.2s; }
-.btn:hover { filter: brightness(1.2); }
-.custom-file-upload { display: inline-block; padding: 12px 20px; cursor: pointer; background: var(--bg3); border: 1px dashed var(--accent); color: var(--accent); border-radius: var(--radius-sm); text-align: center; width: 100%; }
+.status-dot {
+  width: 6px;
+  height: 6px;
+  background: var(--success);
+  border-radius: 50%;
+  display: inline-block;
+  animation: pulse 2s infinite;
+}
 
-/* ── الأدوات الفرعية (Calculator, BMI, etc.) ── */
-.calc-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
-.calc-key { background: var(--bg3); border: 1px solid var(--border); padding: 16px; text-align: center; cursor: pointer; transition: all 0.15s; }
-.output { background: var(--bg3); border: 1px solid var(--border); padding: 14px; color: var(--accent3); white-space: pre-wrap; }
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* ── الأزرار والشبكات ── */
+.launcher { 
+  display: grid; 
+  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); 
+  gap: 10px; 
+  margin-bottom: 28px; 
+}
+
+.grid2 { 
+  display: grid; 
+  grid-template-columns: 1fr 1fr; 
+  gap: 10px; 
+}
+
+.grid3 { 
+  display: grid; 
+  grid-template-columns: repeat(3, 1fr); 
+  gap: 10px; 
+}
+
+.launch-btn { 
+  background: var(--card); 
+  border: 1px solid var(--border); 
+  border-radius: var(--radius-sm); 
+  padding: 16px 10px; 
+  color: var(--text); 
+  font-size: 0.7rem; 
+  font-weight: 600;
+  cursor: pointer; 
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.launch-btn .icon {
+  font-size: 1.8rem;
+}
+
+.launch-btn:hover, 
+.launch-btn.active { 
+  border-color: var(--accent); 
+  background: var(--bg2); 
+  transform: translateY(-2px); 
+  box-shadow: 0 8px 24px var(--border-glow); 
+  color: var(--accent);
+}
+
+/* ── البطاقات (Cards) ── */
+.tool-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-bottom: 16px;
+  transition: all 0.3s ease;
+}
+
+.tool-card:hover {
+  border-color: var(--accent);
+  box-shadow: 0 8px 32px var(--border-glow);
+}
+
+.tool-card.hidden {
+  display: none;
+}
+
+.tool-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 12px;
+}
+
+.tool-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: 0.05em;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  color: var(--muted);
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.close-btn:hover {
+  color: var(--danger);
+  transform: scale(1.2);
+}
+
+/* ── الحقول والمدخلات ── */
+.field {
+  margin-bottom: 16px;
+}
+
+.field label {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--muted);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+input, textarea, select { 
+  background: var(--bg3); 
+  border: 1px solid var(--border); 
+  border-radius: var(--radius-sm); 
+  color: var(--text); 
+  padding: 10px 14px; 
+  width: 100%; 
+  outline: none;
+  font-family: inherit;
+  transition: all 0.2s;
+}
+
+input:focus, 
+textarea:focus, 
+select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 12px var(--border-glow);
+}
+
+input[type="range"] {
+  padding: 0;
+  height: 6px;
+  cursor: pointer;
+}
+
+input[type="color"] {
+  cursor: pointer;
+  padding: 4px;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 80px;
+  font-family: 'Space Mono', monospace;
+}
+
+/* ── Checkboxes ── */
+.checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  cursor: pointer;
+}
+
+.checkbox-row input[type="checkbox"] {
+  width: auto;
+  cursor: pointer;
+}
+
+.checkbox-row label {
+  margin: 0;
+  cursor: pointer;
+  color: var(--text);
+}
+
+/* ── الأزرار ── */
+.btn { 
+  background: var(--accent); 
+  color: #fff; 
+  border: none; 
+  border-radius: var(--radius-sm); 
+  padding: 10px 20px; 
+  font-weight: 700; 
+  cursor: pointer; 
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  transition: all 0.2s; 
+}
+
+.btn:hover { 
+  filter: brightness(1.2);
+  transform: translateY(-2px);
+}
+
+.btn.secondary {
+  background: var(--bg3);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.btn.secondary:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.btn.danger {
+  background: var(--danger);
+}
+
+.btn.sm {
+  padding: 6px 12px;
+  font-size: 0.65rem;
+}
+
+.btn-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+
+/* ── ملف مخصص ── */
+.custom-file-upload { 
+  display: inline-block; 
+  padding: 12px 20px; 
+  cursor: pointer; 
+  background: var(--bg3); 
+  border: 1px dashed var(--accent); 
+  color: var(--accent); 
+  border-radius: var(--radius-sm); 
+  text-align: center;
+  width: 100%;
+  transition: all 0.2s;
+}
+
+.custom-file-upload:hover {
+  background: var(--bg2);
+}
+
+.custom-file-upload input {
+  display: none;
+}
+
+/* ── الآلة الحاسبة ── */
+.calc-display {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  padding: 16px;
+  border-radius: var(--radius-sm);
+  margin-bottom: 12px;
+  text-align: right;
+}
+
+.calc-display .expr {
+  display: block;
+  color: var(--muted);
+  font-size: 0.8rem;
+  margin-bottom: 4px;
+}
+
+.calc-display #calc-val {
+  display: block;
+  font-size: 1.8rem;
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.calc-grid { 
+  display: grid; 
+  grid-template-columns: repeat(4, 1fr); 
+  gap: 8px; 
+}
+
+.calc-key { 
+  background: var(--bg3); 
+  border: 1px solid var(--border); 
+  padding: 16px; 
+  text-align: center; 
+  cursor: pointer; 
+  transition: all 0.15s;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.calc-key:hover {
+  border-color: var(--accent);
+  background: var(--bg2);
+}
+
+.calc-key.clear {
+  background: var(--danger);
+  color: white;
+}
+
+.calc-key.op {
+  background: var(--accent);
+  color: white;
+}
+
+.calc-key.eq {
+  background: var(--accent3);
+  color: var(--bg);
+  font-size: 1.2rem;
+}
+
+.calc-key.span2 {
+  grid-column: span 2;
+}
+
+/* ── خانات المخرجات ── */
+.output { 
+  background: var(--bg3); 
+  border: 1px solid var(--border); 
+  padding: 14px; 
+  color: var(--accent3); 
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  border-radius: var(--radius-sm);
+  margin-top: 8px;
+  font-size: 0.9rem;
+  cursor: default;
+}
+
+/* ── شريط المفاتيح ── */
+.pass-strength {
+  height: 4px;
+  background: var(--bg3);
+  border-radius: 2px;
+  margin: 8px 0;
+  transition: all 0.3s;
+}
+
+/* ── مساحة الملاحظات ── */
+.note-area {
+  min-height: 200px;
+  margin-bottom: 12px;
+}
+
+.note-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+}
+
+.note-count {
+  color: var(--muted);
+  font-size: 0.75rem;
+}
+
+/* ── المؤقت ── */
+.timer-display {
+  font-size: 3rem;
+  font-weight: 700;
+  text-align: center;
+  color: var(--accent);
+  margin: 20px 0;
+  font-family: 'Space Mono', monospace;
+  letter-spacing: 0.05em;
+}
+
+.timer-bar {
+  background: var(--bg3);
+  height: 8px;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+
+.timer-fill {
+  background: linear-gradient(90deg, var(--accent), var(--accent3));
+  height: 100%;
+  transition: width 0.1s linear;
+}
+
+/* ── معاين اللون ── */
+.color-preview {
+  width: 100%;
+  height: 100px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  margin: 12px 0;
+  transition: all 0.2s;
+}
+
+.color-formats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.color-tag {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  padding: 8px;
+  border-radius: var(--radius-sm);
+  text-align: center;
+}
+
+.color-tag span {
+  display: block;
+  color: var(--muted);
+  font-size: 0.65rem;
+  margin-bottom: 4px;
+}
+
+.color-tag code {
+  display: block;
+  color: var(--accent);
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.color-tag code:hover {
+  color: var(--accent2);
+}
+
+/* ── محول الوحدات ── */
+.converter-row {
+  display: flex;
+  gap: 8px;
+  align-items: flex-end;
+}
+
+.converter-row .field {
+  flex: 1;
+}
+
+.swap-btn {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  color: var(--accent);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.swap-btn:hover {
+  background: var(--accent);
+  color: white;
+}
+
+/* ── مقياس BMI ── */
+.bmi-scale {
+  height: 20px;
+  background: linear-gradient(90deg, #6bffb8, #7bffd4, #ffcc6b, #ff6b6b);
+  border-radius: 10px;
+  margin: 12px 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.bmi-marker {
+  position: absolute;
+  width: 4px;
+  height: 100%;
+  background: white;
+  top: 0;
+  transition: left 0.3s;
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
+}
+
+/* ── الحقل النصي (Word Tools) ── */
+.word-in {
+  font-family: 'Space Mono', monospace;
+}
+
+/* ── نافذة المودال (Jojo Modal) ── */
+.modal-overlay { 
+  position: fixed; 
+  top: 0; 
+  left: 0; 
+  right: 0; 
+  bottom: 0; 
+  background: rgba(0,0,0,0.85); 
+  backdrop-filter: blur(5px); 
+  z-index: 9999; 
+  display: flex; 
+  justify-content: center; 
+  align-items: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.3s;
+}
+
+.modal-overlay.hidden {
+  display: none;
+}
+
+.modal-overlay.show {
+  opacity: 1; 
+  pointer-events: auto; 
+}
+
+.modal-content { 
+  background: var(--bg); 
+  border: 1px solid var(--accent); 
+  border-radius: 16px; 
+  width: 90%; 
+  max-width: 500px; 
+  padding: 20px; 
+  box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.spoiler-screen {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.blurred {
+  filter: blur(5px);
+  pointer-events: none;
+}
+
+/* ── المشغل الموسيقي (Player - Glassmorphism) ── */
+.player-wrap {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  z-index: 9998;
+  padding: 16px;
+  transition: all 0.3s;
+}
+
+.player-pill { 
+  background: rgba(19, 26, 19, 0.6); 
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--accent); 
+  border-radius: 50px; 
+  padding: 8px 18px; 
+  display: flex; 
+  align-items: center; 
+  gap: 10px;
+  cursor: pointer;
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 0.8rem;
+  transition: all 0.2s;
+}
+
+.player-pill:hover {
+  background: rgba(19, 26, 19, 0.8);
+  transform: translateY(-2px);
+}
+
+.pill-eq {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+.eq-dot {
+  width: 3px;
+  height: 12px;
+  background: var(--accent);
+  border-radius: 2px;
+  animation: bounce 0.6s infinite;
+}
+
+.eq-dot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.eq-dot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: scaleY(0.5); }
+  50% { transform: scaleY(1); }
+}
+
+.pill-chevron {
+  display: inline-block;
+  transition: transform 0.3s;
+}
+
+.player { 
+  background: rgba(19, 26, 19, 0.85); 
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  border: 1px solid var(--border); 
+  border-radius: 20px; 
+  padding: 12px 20px; 
+  box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.player-btn {
+  background: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-weight: 700;
+}
+
+.player-btn:hover {
+  filter: brightness(1.2);
+  transform: scale(1.05);
+}
+
+.player-btn.mini {
+  width: 32px;
+  height: 32px;
+  background: var(--bg3);
+  color: var(--accent);
+  border: 1px solid var(--border);
+}
+
+.player-info {
+  flex: 1;
+}
+
+.player-title {
+  color: var(--text);
+  font-size: 0.85rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.player-sub {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--muted);
+  font-size: 0.7rem;
+}
+
+.vol-slider {
+  flex: 0 0 80px;
+}
+
+/* ── Minecraft Builder ── */
+#mc-suggestions {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  max-height: 180px;
+  overflow-y: auto;
+}
+
+#mc-suggestions div {
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  border-bottom: 1px solid var(--border);
+}
+
+#mc-suggestions div:hover {
+  background: var(--bg2);
+  color: var(--accent);
+}
+
+/* ── JoJo Tabs ── */
+#jojo-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+#jojo-tabs button {
+  padding: 8px 14px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  border: 1px solid var(--border);
+  background: var(--bg3);
+  color: var(--text);
+  font-size: 0.8rem;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+#jojo-tabs button:hover {
+  border-color: var(--accent);
+}
+
+/* ── Collapse Bar ── */
+#collapse-bar {
+  text-align: center;
+  margin-bottom: 16px;
+}
 
 /* ── التجاوب (Responsive) ── */
-@media (max-width: 500px) {
-  .launcher { grid-template-columns: repeat(3, 1fr); }
-  .grid2, .grid3 { grid-template-columns: 1fr; }
-  .player { min-width: calc(100vw - 32px); }
+@media (max-width: 768px) {
+  .app {
+    padding: 16px;
+  }
+
+  .site-header {
+    padding: 32px 0 24px;
+  }
+
+  .launcher { 
+    grid-template-columns: repeat(3, 1fr); 
+  }
+
+  .grid2, .grid3 { 
+    grid-template-columns: 1fr; 
+  }
+
+  .calc-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .player-wrap {
+    padding: 8px;
+  }
+
+  .player { 
+    flex-direction: column;
+    width: calc(100vw - 16px);
+    min-width: auto;
+  }
+
+  .player-btn {
+    width: 36px;
+    height: 36px;
+  }
+
+  .color-formats {
+    grid-template-columns: 1fr;
+  }
+
+  .modal-content {
+    width: 95%;
+    max-width: 100%;
+    padding: 16px;
+  }
 }
+
+@media (max-width: 480px) {
+  .launcher { 
+    grid-template-columns: repeat(2, 1fr); 
+  }
+
+  .site-header h1 {
+    font-size: 1.8rem;
+  }
+
+  .timer-display {
+    font-size: 2rem;
+  }
+
+  .calc-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+  }
+
+  .calc-key {
+    padding: 12px;
+    font-size: 0.7rem;
+  }
+
+  .player {
+    padding: 8px 12px;
+  }
+
+  .player-title {
+    font-size: 0.75rem;
+  }
+}
+
+/* ── تأثيرات إضافية ── */
+hr {
+  border: none;
+  height: 1px;
+  background: var(--border);
+  margin: 16px 0;
+}
+
+::selection {
+  background: var(--accent);
+  color: white;
+}
+
+/* ── Scrollbar المخصص ── */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+}
+
+/* ── الدعم للعربية والاتجاهات ── */
+[dir="rtl"] {
+  direction: rtl;
+}
+
+[dir="ltr"] {
+  direction: ltr;
+}
+
+/* ── Utilities ── */
+.mt { margin-top: 16px; }
+.mb { margin-bottom: 16px; }
+.text-center { text-align: center; }
+.text-right { text-align: right; }
+.text-left { text-align: left; }
