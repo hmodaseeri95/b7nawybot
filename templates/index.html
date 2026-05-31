@@ -31,13 +31,13 @@
     <button class="launch-btn" onclick="toggle('unit')" id="btn-unit"><span class="icon">📐</span>CONVERT</button>
     <button class="launch-btn" onclick="toggle('age')" id="btn-age"><span class="icon">🎂</span>AGE</button>
     <button class="launch-btn" onclick="toggle('hash')" id="btn-hash"><span class="icon">🔐</span>ENCODE</button>
-    <button class="launch-btn" onclick="toggle('jojo')" id="btn-jojo"><span class="icon">🌀</span>JOJO</button>
+    <button class="launch-btn" onclick="toggle('jojo')" id="btn-jojo"><span class="icon">🗿</span>JOJO</button>
     <button class="launch-btn" onclick="toggle('mc')" id="btn-mc"><span class="icon">⛏️</span>MINECRAFT</button>
-    <button class="launch-btn" onclick="toggle('calc')" id="btn-calc2"><span class="icon">🧮</span>CALC</button>
+    <button class="launch-btn" onclick="toggle('qr')" id="btn-qr"><span class="icon">📱</span>QR CODE</button>
     <button class="launch-btn" onclick="toggle('theme')" id="btn-theme"><span class="icon">✨</span>THEME</button>
     <button class="launch-btn" onclick="toggle('color')" id="btn-color"><span class="icon">🎨</span>COLOR</button>
     <button class="launch-btn" onclick="toggle('about')" id="btn-about"><span class="icon">❓</span>ABOUT</button>
-</div>
+  </div>
 
   <div id="collapse-bar" style="display:none; text-align:center; margin-bottom:16px;">
     <button class="btn secondary" onclick="collapseAll()" style="font-size:0.72rem; padding:7px 20px; letter-spacing:0.12em;">
@@ -54,12 +54,12 @@
       </div>
       <div class="grid2">
         <div class="field">
-          <label>اللون الأساسي (أزرق)</label>
-          <input type="color" id="theme-color-1" value="#7b7bff" oninput="updateThemeColors()" style="height:40px; cursor:pointer;">
+          <label>اللون الأساسي (أخضر غامق)</label>
+          <input type="color" id="theme-color-1" value="#2e7d32" oninput="updateThemeColors()" style="height:40px; cursor:pointer;">
         </div>
         <div class="field">
-          <label>اللون الثانوي (وردي)</label>
-          <input type="color" id="theme-color-2" value="#ff7bb0" oninput="updateThemeColors()" style="height:40px; cursor:pointer;">
+          <label>اللون الثانوي (أخضر فاتح)</label>
+          <input type="color" id="theme-color-2" value="#66bb6a" oninput="updateThemeColors()" style="height:40px; cursor:pointer;">
         </div>
       </div>
       
@@ -67,13 +67,34 @@
       
       <div class="field" style="direction: rtl;">
         <label>الخلفية (تتحرك مع الماوس)</label>
-        <div class="btn-row" style="margin-bottom: 12px;">
-          <button class="btn sm secondary" onclick="setPresetBg('bg1.gif')">🖼️ خلفية 1</button>
-          <button class="btn sm secondary" onclick="setPresetBg('bg2.gif')">🖼️ خلفية 2</button>
+        <div class="btn-row" style="margin-bottom: 16px;">
+          <button class="btn sm secondary" onclick="setPresetBg('bg1.gif')">1️⃣</button>
+          <button class="btn sm secondary" onclick="setPresetBg('bg2.gif')">2️⃣</button>
+          <button class="btn sm secondary" onclick="setPresetBg('bg3.gif')">3️⃣</button>
+          <button class="btn sm secondary" onclick="setPresetBg('bg4.gif')">4️⃣</button>
+          <button class="btn sm secondary" onclick="setPresetBg('bg5.gif')">5️⃣</button>
           <button class="btn sm danger" onclick="clearBg()">🗑️ مسح</button>
         </div>
-        <label>أو ارفع صورة/GIF من جهازك:</label>
-        <input type="file" accept="image/*" onchange="handleBgUpload(event)" style="direction: ltr;">
+        
+        <label class="custom-file-upload">
+          <input type="file" accept="image/*" onchange="handleBgUpload(event)">
+          📤 اضغط هنا لرفع صورة أو GIF من جهازك
+        </label>
+      </div>
+    </div>
+
+    <div id="qr" class="tool-card hidden">
+      <div class="tool-header">
+        <span class="tool-title">📱 QR Code Generator</span>
+        <button class="close-btn" onclick="toggle('qr')">✕</button>
+      </div>
+      <div class="field" style="direction: rtl;">
+        <label>اكتب أي نص أو رابط هنا:</label>
+        <textarea id="qr-input" placeholder="مثال: https://google.com" oninput="generateQR()" style="min-height: 60px; direction: ltr;"></textarea>
+      </div>
+      <div style="text-align: center; margin-top: 20px; min-height: 150px; background: var(--bg); border-radius: var(--radius-sm); padding: 15px;">
+        <img id="qr-img" src="" alt="QR Code" style="display:none; max-width: 150px; border-radius: 8px;">
+        <div id="qr-placeholder" style="color: var(--muted); font-size: 0.8rem; margin-top: 50px;">سيظهر الباركود هنا</div>
       </div>
     </div>
 
@@ -175,13 +196,13 @@
       </div>
       <div class="field">
         <label>Pick a Color</label>
-        <input type="color" id="color-pick" value="#7b7bff" oninput="updateColor(this.value)" style="width:100%;height:50px;padding:4px;border-radius:10px;border:1px solid var(--border);background:var(--bg3);cursor:pointer">
+        <input type="color" id="color-pick" value="#2e7d32" oninput="updateColor(this.value)" style="width:100%;height:50px;padding:4px;border-radius:10px;border:1px solid var(--border);background:var(--bg3);cursor:pointer">
       </div>
-      <div class="color-preview" id="color-prev" style="background:#7b7bff"></div>
+      <div class="color-preview" id="color-prev" style="background:#2e7d32"></div>
       <div class="color-formats">
-        <div class="color-tag"><span>HEX</span><code id="c-hex" onclick="copyRaw(this)">#7b7bff</code></div>
-        <div class="color-tag"><span>RGB</span><code id="c-rgb" onclick="copyRaw(this)">rgb(123, 123, 255)</code></div>
-        <div class="color-tag"><span>HSL</span><code id="c-hsl" onclick="copyRaw(this)">hsl(240, 100%, 74%)</code></div>
+        <div class="color-tag"><span>HEX</span><code id="c-hex" onclick="copyRaw(this)">#2e7d32</code></div>
+        <div class="color-tag"><span>RGB</span><code id="c-rgb" onclick="copyRaw(this)">rgb(46, 125, 50)</code></div>
+        <div class="color-tag"><span>HSL</span><code id="c-hsl" onclick="copyRaw(this)">hsl(123, 46%, 34%)</code></div>
       </div>
       <p style="font-size:0.72rem;color:var(--muted);margin-top:12px">Click any value to copy it</p>
     </div>
@@ -316,22 +337,6 @@
       </div>
     </div>
 
-    <div id="tip" class="tool-card hidden">
-      <div class="tool-header">
-        <span class="tool-title">Tip Calculator</span>
-        <button class="close-btn" onclick="toggle('tip')">✕</button>
-      </div>
-      <div class="grid2">
-        <div class="field"><label>Bill Amount ($)</label><input type="number" id="tip-bill" placeholder="50" oninput="calcTip()"></div>
-        <div class="field"><label>People</label><input type="number" id="tip-ppl" value="1" min="1" oninput="calcTip()"></div>
-      </div>
-      <div class="field">
-        <label>Tip: <span id="tip-pct-val">15</span>%</label>
-        <input type="range" id="tip-pct" min="0" max="50" value="15" oninput="document.getElementById('tip-pct-val').textContent=this.value; calcTip()">
-      </div>
-      <div class="output" id="tip-out">Enter bill amount</div>
-    </div>
-
     <div id="mc" class="tool-card hidden">
       <div class="tool-header">
         <span class="tool-title">⛏️ Minecraft Command Builder</span>
@@ -392,7 +397,7 @@
         <div style="font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;color:var(--accent);letter-spacing:0.1em;margin-bottom:6px">SEVENAWY</div>
         <div style="color:var(--muted);font-size:0.8rem;line-height:1.8;margin-bottom:20px; direction: rtl;">
        هلا والله , هذا مساعدي سفناوي هو اجتهاد شخصي لا اكثر <br>
-          <span style="color:var(--text)">بوت + موقع] سفناوي المساعد]</span><br>
+          <span style="color:var(--text)">[بوت + موقع سفناوي المساعد]</span><br>
           💚 
         </div>
         <div style="display:inline-block;background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:14px 24px;margin-bottom:20px">
@@ -409,8 +414,10 @@
       </div>
     </div>
 
-  </div></div><div class="player-wrap" id="player-wrap">
+  </div>
+</div>
 
+<div class="player-wrap" id="player-wrap">
   <button class="player-pill" id="player-pill" onclick="togglePlayer()" title="Open music player">
     <span id="pill-eq" class="pill-eq">
       <span class="eq-dot"></span><span class="eq-dot"></span><span class="eq-dot"></span>
@@ -432,33 +439,36 @@
     <input type="range" class="vol-slider" id="vol" min="0" max="1" step="0.05" value="0.5" oninput="setVol(this.value)" title="Volume">
     <button class="player-btn mini" onclick="nextTrack()" title="Next">▶</button>
   </div>
-
 </div>
 
 <audio id="audio" loop></audio>
 
 <script>
-
-// خاصية الإخفاء بضغطة H
+// سد ثغرة الإخفاء بـ H (ما تخفي لو كنت تكتب في مربع نص)
 document.addEventListener('keydown', function(event) {
   if (event.key === 'h' || event.key === 'H') {
-    const launcher = document.querySelector('.launcher');
-    if (launcher) {
-      launcher.style.display = (launcher.style.display === 'none') ? 'flex' : 'none';
+    // نتأكد إنك مو جالس تكتب في input أو textarea
+    if (event.target.tagName !== 'INPUT' && event.target.tagName !== 'TEXTAREA') {
+      const launcher = document.querySelector('.launcher');
+      if (launcher) {
+        launcher.style.opacity = (launcher.style.opacity === '0') ? '1' : '0';
+        setTimeout(() => {
+          launcher.style.display = (launcher.style.opacity === '0') ? 'none' : 'grid';
+        }, 300); // تأثير اختفاء ناعم
+      }
     }
   }
 });
 
-// تشغيل الموسيقى عند أول ضغطة في أي مكان في الموقع
+// تشغيل الموسيقى عند أول ضغطة في أي مكان في الموقع (وربطها بالزر)
 document.addEventListener('click', function() {
-  const audio = document.getElementById('audio-player'); // تأكد أن ID المشغل عندك هو audio-player
-  if (audio && audio.paused) {
-    audio.play();
+  if (!isPlaying) {
+    togglePlay(); // نستخدم الدالة الأساسية عشان يتغير شكل زر البلاي لـ إيقاف تلقائياً
   }
-}, { once: true }); // تعمل مرة واحدة فقط
+}, { once: true });
   
-  /* ═══════════════════════════════════════════════
-   UTILITIES & THEME (NEW)
+/* ═══════════════════════════════════════════════
+   UTILITIES & THEME
 ═══════════════════════════════════════════════ */
 function showToast(msg) {
   const t = document.getElementById('toast');
@@ -494,13 +504,13 @@ function handleBgUpload(event) {
 }
 
 function setPresetBg(filename) {
-  applyBg(`static/${filename}`); // مسار افتراضي لخلفيات الـ GitHub
+  applyBg(`static/${filename}`);
 }
 
 function applyBg(url) {
   bgEl.style.backgroundImage = `url(${url})`;
   bgEl.style.opacity = '1';
-  canvasEl.style.opacity = '0.2'; // نخفف الجزيئات عشان تبان الخلفية
+  canvasEl.style.opacity = '0.2';
 }
 
 function clearBg() {
@@ -509,7 +519,6 @@ function clearBg() {
   canvasEl.style.opacity = '1';
 }
 
-// حركة الخلفية مع الماوس
 document.addEventListener('mousemove', (e) => {
   if(bgEl.style.opacity === '1') {
     const x = (e.clientX / window.innerWidth - 0.5) * 40; 
@@ -517,6 +526,26 @@ document.addEventListener('mousemove', (e) => {
     bgEl.style.transform = `translate(${x}px, ${y}px) scale(1.05)`;
   }
 });
+
+/* ═══════════════════════════════════════════════
+   QR CODE GENERATOR (NEW TOOL)
+═══════════════════════════════════════════════ */
+function generateQR() {
+  const text = document.getElementById('qr-input').value;
+  const img = document.getElementById('qr-img');
+  const placeholder = document.getElementById('qr-placeholder');
+  
+  if (text.trim() === '') {
+    img.style.display = 'none';
+    placeholder.style.display = 'block';
+    return;
+  }
+  
+  // نستخدم API مجاني لتوليد الباركود
+  img.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(text)}&color=2e7d32&bgcolor=e8f5e9`;
+  img.style.display = 'inline-block';
+  placeholder.style.display = 'none';
+}
 
 /* ═══════════════════════════════════════════════
    CANVAS PARTICLE BACKGROUND
@@ -543,7 +572,7 @@ document.addEventListener('mousemove', (e) => {
       this.vx = (Math.random() - 0.5) * 0.3;
       this.vy = (Math.random() - 0.5) * 0.3;
       this.a = Math.random() * 0.5 + 0.1;
-      const cols = ['#7b7bff','#ff7bb0','#7bffd4','#a0a0ff'];
+      const cols = ['#2e7d32','#66bb6a','#a5d6a7','#1b5e20']; // جزيئات خضراء تناسب الثيم الجديد
       this.c = cols[Math.floor(Math.random() * cols.length)];
     }
     update() {
@@ -570,7 +599,7 @@ document.addEventListener('mousemove', (e) => {
           ctx.beginPath();
           ctx.moveTo(particles[i].x, particles[i].y);
           ctx.lineTo(particles[j].x, particles[j].y);
-          ctx.strokeStyle = `rgba(123,123,255,${0.08*(1-d/100)})`;
+          ctx.strokeStyle = `rgba(102,187,106,${0.08*(1-d/100)})`; // لون الخط أخضر
           ctx.lineWidth = 0.5;
           ctx.stroke();
         }
@@ -590,16 +619,20 @@ document.addEventListener('mousemove', (e) => {
 /* ═══════════════════════════════════════════════
    TOOL TOGGLE
 ═══════════════════════════════════════════════ */
-const toolIds = ['theme','calc','pass','notes','timer','color','unit','bmi','age','hash','coin','word','tip','mc','jojo','about'];
+const toolIds = ['theme','calc','pass','notes','timer','color','unit','bmi','age','hash','coin','word','mc','jojo','qr','about'];
 
 function updateCollapseBar() {
-  const anyOpen = toolIds.some(id => !document.getElementById(id).classList.contains('hidden'));
+  const anyOpen = toolIds.some(id => {
+    const el = document.getElementById(id);
+    return el && !el.classList.contains('hidden');
+  });
   document.getElementById('collapse-bar').style.display = anyOpen ? 'block' : 'none';
 }
 
 function collapseAll() {
   toolIds.forEach(id => {
-    document.getElementById(id).classList.add('hidden');
+    const el = document.getElementById(id);
+    if(el) el.classList.add('hidden');
     const btn = document.getElementById('btn-' + id);
     if(btn) btn.classList.remove('active');
   });
@@ -620,6 +653,7 @@ function togglePlayer() {
 function toggle(id) {
   const card = document.getElementById(id);
   const btn = document.getElementById('btn-' + id);
+  if(!card) return;
   const hidden = card.classList.contains('hidden');
   card.classList.toggle('hidden');
   if(btn) btn.classList.toggle('active', hidden);
@@ -696,14 +730,14 @@ function genPass() {
   let pass = '';
   for (let i = 0; i < len; i++) pass += chars[Math.floor(Math.random() * chars.length)];
   document.getElementById('pass-out').textContent = pass;
-  // strength bar
+  
   let strength = 0;
   if (document.getElementById('p-upper').checked) strength++;
   if (document.getElementById('p-lower').checked) strength++;
   if (document.getElementById('p-num').checked) strength++;
   if (document.getElementById('p-sym').checked) strength++;
   if (len >= 16) strength++;
-  const colors = ['#ff6b6b','#ff9f6b','#ffcc6b','#6bffb8','#7bffd4'];
+  const colors = ['#ff5252','#ffd740','#ffcc6b','#69f0ae','#66bb6a'];
   const bar = document.getElementById('pass-bar');
   bar.style.background = colors[Math.min(strength-1, 4)];
   bar.style.width = (strength * 20) + '%';
@@ -875,10 +909,10 @@ function calcBmi() {
   if (!w || !h) return;
   const bmi = w / (h * h);
   let cat, color;
-  if (bmi < 18.5) { cat = 'Underweight'; color = '#6bffb8'; }
-  else if (bmi < 25) { cat = 'Normal Weight'; color = '#7bffd4'; }
-  else if (bmi < 30) { cat = 'Overweight'; color = '#ffcc6b'; }
-  else { cat = 'Obese'; color = '#ff6b6b'; }
+  if (bmi < 18.5) { cat = 'Underweight'; color = '#69f0ae'; }
+  else if (bmi < 25) { cat = 'Normal Weight'; color = '#a5d6a7'; }
+  else if (bmi < 30) { cat = 'Overweight'; color = '#ffd740'; }
+  else { cat = 'Obese'; color = '#ff5252'; }
   document.getElementById('bmi-out').textContent = `BMI: ${bmi.toFixed(1)} — ${cat}`;
   document.getElementById('bmi-out').style.color = color;
   const pct = Math.min(Math.max((bmi - 10) / 40, 0), 1);
@@ -962,23 +996,8 @@ function textReverse() {
 }
 
 /* ═══════════════════════════════════════════════
-   TIP CALCULATOR
-═══════════════════════════════════════════════ */
-function calcTip() {
-  const bill = parseFloat(document.getElementById('tip-bill').value);
-  const pct = parseFloat(document.getElementById('tip-pct').value);
-  const ppl = parseInt(document.getElementById('tip-ppl').value) || 1;
-  if (!bill) { document.getElementById('tip-out').textContent = 'Enter bill amount'; return; }
-  const tip = bill * pct / 100;
-  const total = bill + tip;
-  document.getElementById('tip-out').textContent =
-    `Tip: $${tip.toFixed(2)}\nTotal: $${total.toFixed(2)}\nPer person: $${(total/ppl).toFixed(2)}`;
-}
-
-/* ═══════════════════════════════════════════════
    LOFI PLAYER
 ═══════════════════════════════════════════════ */
-// Using royalty-free lofi streams from public sources
 const tracks = [
   { name: 'lofi hip hop ~ chill beats', sub: 'jojo lofi 1', url: 'static/lofi1.mp3' },
   { name: 'midnight vibes', sub: 'jojo lofi 2', url: 'static/lofi2.mp3' },
@@ -1006,7 +1025,6 @@ function togglePlay() {
   if (isPlaying) {
     audio.pause(); isPlaying = false;
     document.getElementById('play-btn').textContent = '▶';
-    showToast('Paused');
   } else {
     audio.play().catch(() => showToast('⚠ Click again to play (browser policy)'));
     isPlaying = true;
@@ -1030,39 +1048,33 @@ function prevTrack() {
    MINECRAFT ENCHANT BUILDER
 ═══════════════════════════════════════════════ */
 const MC_ITEMS = [
-  // Swords
   { id:'wooden_sword',    name:'Wooden Sword',    icon:'🗡️', type:'sword' },
   { id:'stone_sword',     name:'Stone Sword',     icon:'🗡️', type:'sword' },
   { id:'iron_sword',      name:'Iron Sword',      icon:'⚔️', type:'sword' },
   { id:'golden_sword',    name:'Golden Sword',    icon:'✨', type:'sword' },
   { id:'diamond_sword',   name:'Diamond Sword',   icon:'💎', type:'sword' },
   { id:'netherite_sword', name:'Netherite Sword', icon:'🔥', type:'sword' },
-  // Axes
   { id:'wooden_axe',    name:'Wooden Axe',    icon:'🪓', type:'axe' },
   { id:'stone_axe',     name:'Stone Axe',     icon:'🪓', type:'axe' },
   { id:'iron_axe',      name:'Iron Axe',      icon:'🪓', type:'axe' },
   { id:'golden_axe',    name:'Golden Axe',    icon:'🪓', type:'axe' },
   { id:'diamond_axe',   name:'Diamond Axe',   icon:'💎', type:'axe' },
   { id:'netherite_axe', name:'Netherite Axe', icon:'🔥', type:'axe' },
-  // Pickaxes
   { id:'wooden_pickaxe',    name:'Wooden Pickaxe',    icon:'⛏️', type:'pickaxe' },
   { id:'stone_pickaxe',     name:'Stone Pickaxe',     icon:'⛏️', type:'pickaxe' },
   { id:'iron_pickaxe',      name:'Iron Pickaxe',      icon:'⛏️', type:'pickaxe' },
   { id:'golden_pickaxe',    name:'Golden Pickaxe',    icon:'⛏️', type:'pickaxe' },
   { id:'diamond_pickaxe',   name:'Diamond Pickaxe',   icon:'💎', type:'pickaxe' },
   { id:'netherite_pickaxe', name:'Netherite Pickaxe', icon:'🔥', type:'pickaxe' },
-  // Shovels
   { id:'wooden_shovel',    name:'Wooden Shovel',    icon:'🔧', type:'shovel' },
   { id:'stone_shovel',     name:'Stone Shovel',     icon:'🔧', type:'shovel' },
   { id:'iron_shovel',      name:'Iron Shovel',      icon:'🔧', type:'shovel' },
   { id:'diamond_shovel',   name:'Diamond Shovel',   icon:'💎', type:'shovel' },
   { id:'netherite_shovel', name:'Netherite Shovel', icon:'🔥', type:'shovel' },
-  // Hoes
   { id:'wooden_hoe',    name:'Wooden Hoe',    icon:'🌾', type:'hoe' },
   { id:'iron_hoe',      name:'Iron Hoe',      icon:'🌾', type:'hoe' },
   { id:'diamond_hoe',   name:'Diamond Hoe',   icon:'💎', type:'hoe' },
   { id:'netherite_hoe', name:'Netherite Hoe', icon:'🔥', type:'hoe' },
-  // Helmets
   { id:'leather_helmet',    name:'Leather Helmet',    icon:'🪖', type:'helmet' },
   { id:'chainmail_helmet',  name:'Chainmail Helmet',  icon:'🪖', type:'helmet' },
   { id:'iron_helmet',       name:'Iron Helmet',       icon:'🪖', type:'helmet' },
@@ -1070,34 +1082,28 @@ const MC_ITEMS = [
   { id:'diamond_helmet',    name:'Diamond Helmet',    icon:'💎', type:'helmet' },
   { id:'netherite_helmet',  name:'Netherite Helmet',  icon:'🔥', type:'helmet' },
   { id:'turtle_helmet',     name:'Turtle Helmet',     icon:'🐢', type:'helmet', extra:'turtle' },
-  // Chestplates
   { id:'leather_chestplate',    name:'Leather Chestplate',    icon:'👕', type:'chestplate' },
   { id:'chainmail_chestplate',  name:'Chainmail Chestplate',  icon:'👕', type:'chestplate' },
   { id:'iron_chestplate',       name:'Iron Chestplate',       icon:'👕', type:'chestplate' },
   { id:'golden_chestplate',     name:'Golden Chestplate',     icon:'👕', type:'chestplate' },
   { id:'diamond_chestplate',    name:'Diamond Chestplate',    icon:'💎', type:'chestplate' },
   { id:'netherite_chestplate',  name:'Netherite Chestplate',  icon:'🔥', type:'chestplate' },
-  // Leggings
   { id:'leather_leggings',   name:'Leather Leggings',   icon:'👖', type:'leggings' },
   { id:'iron_leggings',      name:'Iron Leggings',      icon:'👖', type:'leggings' },
   { id:'diamond_leggings',   name:'Diamond Leggings',   icon:'💎', type:'leggings' },
   { id:'netherite_leggings', name:'Netherite Leggings', icon:'🔥', type:'leggings' },
-  // Boots
   { id:'leather_boots',   name:'Leather Boots',   icon:'👢', type:'boots' },
   { id:'iron_boots',      name:'Iron Boots',      icon:'👢', type:'boots' },
   { id:'golden_boots',    name:'Golden Boots',    icon:'👢', type:'boots' },
   { id:'diamond_boots',   name:'Diamond Boots',   icon:'💎', type:'boots' },
   { id:'netherite_boots', name:'Netherite Boots', icon:'🔥', type:'boots' },
-  // Ranged
   { id:'bow',             name:'Bow',             icon:'🏹', type:'bow' },
   { id:'crossbow',        name:'Crossbow',        icon:'🏹', type:'crossbow' },
   { id:'trident',         name:'Trident',         icon:'🔱', type:'trident' },
-  // Tools
   { id:'fishing_rod',     name:'Fishing Rod',     icon:'🎣', type:'fishing_rod' },
   { id:'shears',          name:'Shears',          icon:'✂️', type:'shears' },
   { id:'flint_and_steel', name:'Flint and Steel', icon:'🔥', type:'flint' },
   { id:'carrot_on_a_stick', name:'Carrot on a Stick', icon:'🥕', type:'carrot_stick' },
-  // Special
   { id:'shield',          name:'Shield',          icon:'🛡️', type:'shield' },
   { id:'elytra',          name:'Elytra',          icon:'🪽', type:'elytra' },
   { id:'book',            name:'Book',             icon:'📖', type:'book' },
@@ -1151,7 +1157,7 @@ function mcSelectItem(id) {
   document.getElementById('mc-item-name').textContent = mcSelected.name;
   document.getElementById('mc-item-id').textContent = 'minecraft:' + mcSelected.id;
   document.getElementById('mc-item-selected').style.display = 'block';
-  // Build enchant checkboxes
+  
   const type = mcSelected.extra || mcSelected.type;
   const enchants = MC_ENCHANTS[type] || [];
   const el = document.getElementById('mc-enchants');
@@ -1163,7 +1169,7 @@ function mcSelectItem(id) {
       <select id="lvl_${e}" onchange="mcBuild()" style="width:auto;padding:2px 4px;font-size:0.72rem;background:var(--bg);border:1px solid var(--border);border-radius:4px;color:var(--text)">${opts}</select>
     </div>`;
   }).join('');
-  // Extras (wear-specific: durability bar display only)
+  
   const extras = document.getElementById('mc-extras');
   extras.innerHTML = '';
   if (['helmet','chestplate','leggings','boots'].includes(mcSelected.type)) {
@@ -1217,7 +1223,7 @@ function mcReset() {
 }
 
 /* ═══════════════════════════════════════════════
-   JOJO BIZARRE ADVENTURE WIKI (UPDATED STORY & IMAGES)
+   JOJO BIZARRE ADVENTURE WIKI
 ═══════════════════════════════════════════════ */
 const JOJO_DATA = [
   {
