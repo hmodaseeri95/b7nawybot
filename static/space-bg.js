@@ -144,7 +144,9 @@ function tick(now) {
   const dt = Math.min((now - last) / 1000, 0.05);
   last = now;
   if (!reduced) {
-    hero.rotation.y += dt * 0.12;
+    hero.rotation.x += dt * 0.07;
+    hero.rotation.y += dt * 0.11;
+    hero.rotation.z += dt * 0.045;
     hero.position.y = Math.sin(now * 0.00045) * 0.12;
     debris.rotation.y += dt * 0.02;
     floaters.forEach((item) => {
