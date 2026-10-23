@@ -430,7 +430,7 @@ async def avatar(interaction: discord.Interaction, member: discord.Member | None
 
 
 if __name__ == "__main__":
-    token = os.environ.get("MTU2MzA5NDYzOTE4NjE0OTQ2Ng.GTvqKT.XYhxmI_q2uWJCImSmK5NgfJUayFSMf6hrp7QWo")
+    token = os.environ.get("DISCORD_TOKEN")
     if not token:
         raise SystemExit("DISCORD_TOKEN غير موجود. أضفه في متغيرات Render أو البيئة المحلية.")
 
