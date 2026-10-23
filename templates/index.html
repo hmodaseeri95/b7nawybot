@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SEVENAWY</title>
-  <link rel="stylesheet" href="static/style.css">
+  <link rel="stylesheet" href="/static/style.css">
 </head>
-<body>
+<body data-theme="day" data-menu="tiles">
 
 <div id="dynamic-bg"></div>
 
@@ -18,27 +18,64 @@
 
   <header class="site-header" id="top">
     <h1>SEVENAWY</h1>
-    <p><span class="status-dot"></span>ALL SYSTEMS ONLINE · TOOLS READY</p>
+    <p><span class="status-dot"></span>سفناوي جاهز · كل الأدوات شغالة</p>
   </header>
 
-  <div class="launcher">
-    <button class="launch-btn" onclick="toggle('theme')" id="btn-theme"><span class="icon">✨</span>THEME</button>
-    <button class="launch-btn" onclick="toggle('calc')" id="btn-calc"><span class="icon">🧮</span>CALC</button>
-    <button class="launch-btn" onclick="toggle('pass')" id="btn-pass"><span class="icon">🔑</span>PASSWORD</button>
-    <button class="launch-btn" onclick="toggle('notes')" id="btn-notes"><span class="icon">📝</span>NOTES</button>
-    <button class="launch-btn" onclick="toggle('timer')" id="btn-timer"><span class="icon">⏱️</span>TIMER</button>
-    <button class="launch-btn" onclick="toggle('color')" id="btn-color"><span class="icon">🎨</span>COLOR</button>
-    <button class="launch-btn" onclick="toggle('unit')" id="btn-unit"><span class="icon">📐</span>CONVERT</button>
-    <button class="launch-btn" onclick="toggle('bmi')" id="btn-bmi"><span class="icon">💪</span>BMI</button>
-    <button class="launch-btn" onclick="toggle('age')" id="btn-age"><span class="icon">🎂</span>AGE</button>
-    <button class="launch-btn" onclick="toggle('hash')" id="btn-hash"><span class="icon">🔐</span>ENCODE</button>
-    <button class="launch-btn" onclick="toggle('coin')" id="btn-coin"><span class="icon">🎲</span>RANDOM</button>
-    <button class="launch-btn" onclick="toggle('word')" id="btn-word"><span class="icon">✍️</span>WORDS</button>
-    <button class="launch-btn" onclick="toggle('qr')" id="btn-qr"><span class="icon">📱</span>QR CODE</button>
-    <button class="launch-btn" onclick="toggle('mc')" id="btn-mc"><span class="icon">⛏️</span>MINECRAFT</button>
-    <button class="launch-btn" onclick="toggle('jojo')" id="btn-jojo"><span class="icon">🌀</span>JOJO</button>
-    <button class="launch-btn" onclick="toggle('about')" id="btn-about"><span class="icon">❓</span>ABOUT</button>
+  <div class="top-bar">
+    <div class="menu-switch" id="menu-switch">
+      <button class="menu-chip active" data-menu="tiles" onclick="setMenu('tiles')">شبكة</button>
+      <button class="menu-chip" data-menu="bento" onclick="setMenu('bento')">بنتو</button>
+      <button class="menu-chip" data-menu="sidebar" onclick="setMenu('sidebar')">جانبي</button>
+      <button class="menu-chip" data-menu="orbit" onclick="setMenu('orbit')">مدارات</button>
+      <button class="menu-chip" data-menu="terminal" onclick="setMenu('terminal')">طرفية</button>
+    </div>
+    <button class="night-toggle" id="night-toggle" onclick="toggleNight()">رؤية ليلية</button>
   </div>
+
+  <div class="nav-search">
+    <input type="search" id="nav-filter" placeholder="ابحث عن أداة..." oninput="filterNav(this.value)">
+  </div>
+
+  <nav class="nav-root" id="nav-root">
+    <div class="nav-canvas">
+      <section class="nav-group open" data-cat="daily">
+        <h3 class="nav-cat" onclick="openNavGroup(this)">يومي</h3>
+        <div class="nav-items">
+          <button class="launch-btn" onclick="toggle('calc')" id="btn-calc" style="--a:0deg"><span class="icon">🧮</span>حاسبة</button>
+          <button class="launch-btn" onclick="toggle('pass')" id="btn-pass" style="--a:51deg"><span class="icon">🔑</span>كلمة سر</button>
+          <button class="launch-btn" onclick="toggle('notes')" id="btn-notes" style="--a:102deg"><span class="icon">📝</span>ملاحظات</button>
+          <button class="launch-btn" onclick="toggle('timer')" id="btn-timer" style="--a:153deg"><span class="icon">⏱️</span>مؤقت</button>
+          <button class="launch-btn" onclick="toggle('color')" id="btn-color" style="--a:204deg"><span class="icon">🎨</span>ألوان</button>
+          <button class="launch-btn" onclick="toggle('unit')" id="btn-unit" style="--a:255deg"><span class="icon">📐</span>تحويل</button>
+          <button class="launch-btn" onclick="toggle('bmi')" id="btn-bmi" style="--a:306deg"><span class="icon">💪</span>BMI</button>
+        </div>
+      </section>
+      <section class="nav-group" data-cat="text">
+        <h3 class="nav-cat" onclick="openNavGroup(this)">نصوص</h3>
+        <div class="nav-items">
+          <button class="launch-btn" onclick="toggle('age')" id="btn-age" style="--a:0deg"><span class="icon">🎂</span>العمر</button>
+          <button class="launch-btn" onclick="toggle('hash')" id="btn-hash" style="--a:72deg"><span class="icon">🔐</span>تشفير</button>
+          <button class="launch-btn" onclick="toggle('word')" id="btn-word" style="--a:144deg"><span class="icon">✍️</span>كلمات</button>
+          <button class="launch-btn" onclick="toggle('qr')" id="btn-qr" style="--a:216deg"><span class="icon">📱</span>QR</button>
+          <button class="launch-btn" onclick="toggle('coin')" id="btn-coin" style="--a:288deg"><span class="icon">🎲</span>عشوائي</button>
+        </div>
+      </section>
+      <section class="nav-group" data-cat="fun">
+        <h3 class="nav-cat" onclick="openNavGroup(this)">ترفيه</h3>
+        <div class="nav-items">
+          <button class="launch-btn" onclick="toggle('mc')" id="btn-mc" style="--a:0deg"><span class="icon">⛏️</span>ماينكرافت</button>
+          <button class="launch-btn" onclick="toggle('jojo')" id="btn-jojo" style="--a:120deg"><span class="icon">🌀</span>جوجو</button>
+          <button class="launch-btn" onclick="toggle('about')" id="btn-about" style="--a:240deg"><span class="icon">❓</span>عن الموقع</button>
+        </div>
+      </section>
+      <section class="nav-group" data-cat="look">
+        <h3 class="nav-cat" onclick="openNavGroup(this)">مظهر</h3>
+        <div class="nav-items">
+          <button class="launch-btn" onclick="toggle('theme')" id="btn-theme" style="--a:0deg"><span class="icon">✨</span>تخصيص</button>
+        </div>
+      </section>
+    </div>
+  </nav>
 
   <div id="collapse-bar" style="display:none; text-align:center; margin-bottom:16px;">
     <button class="btn secondary" onclick="collapseAll()" style="font-size:0.72rem; padding:7px 20px; letter-spacing:0.12em;">
@@ -54,14 +91,14 @@
         <button class="close-btn" onclick="toggle('theme')">✕</button>
       </div>
       <div class="grid2" style="direction: rtl;">
-        <div class="field"><label>الخلفية الأساسية</label><input type="color" id="tc-bg" value="#0a0a0f" oninput="updateThemeColors()"></div>
-        <div class="field"><label>خلفية البطاقات</label><input type="color" id="tc-card" value="#13131a" oninput="updateThemeColors()"></div>
-        <div class="field"><label>لون الحدود</label><input type="color" id="tc-border" value="#2a2a3a" oninput="updateThemeColors()"></div>
-        <div class="field"><label>لون النص</label><input type="color" id="tc-text" value="#e8e8f5" oninput="updateThemeColors()"></div>
+        <div class="field"><label>الخلفية الأساسية</label><input type="color" id="tc-bg" value="#f3faf4" oninput="updateThemeColors()"></div>
+        <div class="field"><label>خلفية البطاقات</label><input type="color" id="tc-card" value="#ffffff" oninput="updateThemeColors()"></div>
+        <div class="field"><label>لون الحدود</label><input type="color" id="tc-border" value="#b7dfc0" oninput="updateThemeColors()"></div>
+        <div class="field"><label>لون النص</label><input type="color" id="tc-text" value="#14331c" oninput="updateThemeColors()"></div>
         <div class="field"><label>اللون الأساسي 1</label><input type="color" id="tc-acc1" value="#2e7d32" oninput="updateThemeColors()"></div>
         <div class="field"><label>اللون الأساسي 2</label><input type="color" id="tc-acc2" value="#4caf50" oninput="updateThemeColors()"></div>
         <div class="field"><label>اللون الأساسي 3</label><input type="color" id="tc-acc3" value="#81c784" oninput="updateThemeColors()"></div>
-        <div class="field"><label>لون النص الباهت</label><input type="color" id="tc-muted" value="#7070a0" oninput="updateThemeColors()"></div>
+        <div class="field"><label>لون النص الباهت</label><input type="color" id="tc-muted" value="#5b7d66" oninput="updateThemeColors()"></div>
       </div>
       
       <hr style="border:0; border-top:1px solid var(--border); margin: 20px 0;">
@@ -301,7 +338,52 @@
 </div>
 
 <script>
-document.addEventListener('keydown', function(event) { if (event.key === 'h' || event.key === 'H') { if (event.target.tagName !== 'INPUT' && event.target.tagName !== 'TEXTAREA') { const launcher = document.querySelector('.launcher'); if (launcher) { launcher.style.opacity = (launcher.style.opacity === '0') ? '1' : '0'; setTimeout(() => { launcher.style.display = (launcher.style.opacity === '0') ? 'none' : 'grid'; }, 300); } } } });
+function setMenu(name) {
+  document.body.dataset.menu = name;
+  localStorage.setItem('sevenawy-menu', name);
+  document.querySelectorAll('.menu-chip').forEach(chip => chip.classList.toggle('active', chip.dataset.menu === name));
+  if (name === 'sidebar') {
+    const first = document.querySelector('.nav-group');
+    document.querySelectorAll('.nav-group').forEach(group => group.classList.toggle('open', group === first));
+  }
+}
+function toggleNight() {
+  const night = document.body.dataset.theme !== 'night';
+  applyNight(night);
+}
+function applyNight(night) {
+  document.body.dataset.theme = night ? 'night' : 'day';
+  localStorage.setItem('sevenawy-night', night ? '1' : '0');
+  const btn = document.getElementById('night-toggle');
+  if (btn) {
+    btn.classList.toggle('active', night);
+    btn.textContent = night ? 'وضع نهاري' : 'رؤية ليلية';
+  }
+  if (night) {
+    document.getElementById('tc-bg').value = '#0a0a0f';
+    document.getElementById('tc-card').value = '#13131a';
+    document.getElementById('tc-border').value = '#2a2a3a';
+    document.getElementById('tc-text').value = '#e8e8f5';
+    document.getElementById('tc-muted').value = '#7070a0';
+  } else {
+    document.getElementById('tc-bg').value = '#f3faf4';
+    document.getElementById('tc-card').value = '#ffffff';
+    document.getElementById('tc-border').value = '#b7dfc0';
+    document.getElementById('tc-text').value = '#14331c';
+    document.getElementById('tc-muted').value = '#5b7d66';
+  }
+}
+function filterNav(query) {
+  const q = query.trim().toLowerCase();
+  document.querySelectorAll('.launch-btn').forEach(btn => {
+    btn.hidden = !(!q || btn.textContent.toLowerCase().includes(q));
+  });
+}
+function openNavGroup(el) {
+  const group = el.closest('.nav-group');
+  document.querySelectorAll('.nav-group').forEach(item => item.classList.toggle('open', item === group));
+}
+document.addEventListener('keydown', function(event) { if (event.key === 'h' || event.key === 'H') { if (event.target.tagName !== 'INPUT' && event.target.tagName !== 'TEXTAREA' && event.target.tagName !== 'SELECT') { const launcher = document.querySelector('.nav-root'); if (launcher) { launcher.style.display = (launcher.style.display === 'none') ? '' : 'none'; } } } });
 document.addEventListener('click', function() { if (!isPlaying && document.getElementById('audio')) { togglePlay(); } }, { once: true });
 
 function showToast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2500); }
@@ -505,7 +587,12 @@ function closeJojoModal() { document.getElementById('jojo-modal').classList.remo
 const _origToggle = toggle;
 window.toggle = function(id) { _origToggle(id); if (id === 'jojo' && !document.getElementById('jojo').classList.contains('hidden')) jojoRender(); };
 // تفعيل تحميل أدوات التصنيف
-window.onload = function() { loadUnitCat(); loadNote(); };
+window.onload = function() {
+  loadUnitCat();
+  loadNote();
+  applyNight(localStorage.getItem('sevenawy-night') === '1');
+  setMenu(localStorage.getItem('sevenawy-menu') || 'tiles');
+};
 </script>
 </body>
 </html>

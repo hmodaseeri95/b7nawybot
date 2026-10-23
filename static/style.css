@@ -1,14 +1,33 @@
 /* ── استيراد الخطوط ── */
-@import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;700;800&display=swap');
 
-:root {
+:root, body[data-theme="day"] {
+  --bg: #f3faf4;
+  --bg2: #ffffff;
+  --bg3: #e7f5ea;
+  --card: #ffffff;
+  --border: #b7dfc0;
+  --border-glow: #1b7a3a22;
+  --accent: #1b7a3a;
+  --accent2: #2e9d4f;
+  --accent3: #4caf50;
+  --text: #14331c;
+  --muted: #5b7d66;
+  --danger: #c62828;
+  --success: #1b7a3a;
+  --warn: #ed6c02;
+  --radius: 18px;
+  --radius-sm: 12px;
+  --overlay: rgba(243, 250, 244, 0.72);
+}
+
+body[data-theme="night"] {
   --bg: #0a0a0f;
   --bg2: #111118;
   --bg3: #18181f;
   --card: #13131a;
   --border: #2a2a3a;
   --border-glow: #2e7d3244;
-  /* الألوان الأساسية تعدلت لدرجات الأخضر حسب طلبك */
   --accent: #2e7d32;
   --accent2: #4caf50;
   --accent3: #81c784;
@@ -17,8 +36,7 @@
   --danger: #ff6b6b;
   --success: #6bffb8;
   --warn: #ffcc6b;
-  --radius: 16px;
-  --radius-sm: 10px;
+  --overlay: rgba(10, 10, 15, 0.75);
 }
 
 /* ── التنسيقات الأساسية ── */
@@ -27,7 +45,7 @@ html { scroll-behavior: smooth; }
 body { 
   background: var(--bg); 
   color: var(--text); 
-  font-family: 'Space Mono', monospace; 
+  font-family: 'IBM Plex Sans Arabic', 'Space Mono', sans-serif; 
   min-height: 100vh; 
   overflow-x: hidden; 
   line-height: 1.6;
@@ -66,8 +84,10 @@ body {
   left: 0; 
   width: 100%; 
   height: 100%; 
-  background: rgba(10, 10, 15, 0.75); 
+  background: var(--overlay); 
 }
+
+body[data-theme="day"] #bg-canvas { opacity: 0.28; }
 
 /* ── Toast Notification ── */
 .toast {
@@ -93,7 +113,7 @@ body {
 .app { 
   position: relative; 
   z-index: 10; 
-  max-width: 820px; 
+  max-width: 980px; 
   margin: 0 auto; 
   padding: 24px 16px 120px; 
 }
@@ -166,14 +186,15 @@ body {
   border-radius: var(--radius-sm); 
   padding: 16px 10px; 
   color: var(--text); 
-  font-size: 0.7rem; 
-  font-weight: 600;
+  font-size: 0.82rem; 
+  font-weight: 700;
   cursor: pointer; 
   transition: all 0.2s ease;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 8px;
+  box-shadow: 0 4px 14px var(--border-glow);
 }
 
 .launch-btn .icon {
@@ -973,3 +994,188 @@ hr {
 .text-center { text-align: center; }
 .text-right { text-align: right; }
 .text-left { text-align: left; }
+
+/* ── شريط التحكم والقوائم الخمس ── */
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+
+.menu-switch {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.menu-chip, .night-toggle {
+  border: 1px solid var(--border);
+  background: var(--card);
+  color: var(--text);
+  border-radius: 999px;
+  padding: 8px 12px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.menu-chip.active, .night-toggle.active {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
+}
+
+.night-toggle { margin-inline-start: auto; }
+
+.nav-search {
+  width: 100%;
+  margin-bottom: 14px;
+}
+
+.nav-search input {
+  background: var(--bg2);
+}
+
+.nav-group { margin-bottom: 14px; }
+.nav-cat {
+  color: var(--accent);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  margin-bottom: 8px;
+}
+
+body[data-menu="tiles"] .nav-canvas {
+  display: block;
+}
+body[data-menu="tiles"] .nav-items {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(128px, 1fr));
+  gap: 10px;
+}
+
+body[data-menu="bento"] .nav-canvas {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  gap: 12px;
+}
+body[data-menu="bento"] .nav-group {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 16px;
+  margin: 0;
+}
+body[data-menu="bento"] .nav-group:first-child {
+  grid-row: span 2;
+}
+body[data-menu="bento"] .nav-items {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+body[data-menu="bento"] .launch-btn {
+  min-height: 88px;
+  border-radius: 16px;
+}
+
+body[data-menu="sidebar"] .nav-canvas {
+  display: grid;
+  grid-template-columns: 210px 1fr;
+  gap: 10px 16px;
+  align-items: start;
+}
+body[data-menu="sidebar"] .nav-group {
+  display: contents;
+  margin: 0;
+}
+body[data-menu="sidebar"] .nav-items { display: none; }
+body[data-menu="sidebar"] .nav-group.open .nav-items {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 8px;
+  grid-column: 2;
+  grid-row: 1 / span 8;
+}
+body[data-menu="sidebar"] .nav-cat {
+  grid-column: 1;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px 12px;
+  cursor: pointer;
+}
+
+body[data-menu="orbit"] .nav-canvas {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+body[data-menu="orbit"] .nav-group {
+  width: 230px;
+  height: 230px;
+  position: relative;
+  border-radius: 50%;
+  border: 1px dashed var(--border);
+  margin: 8px;
+}
+body[data-menu="orbit"] .nav-cat {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  width: 90px;
+}
+body[data-menu="orbit"] .nav-items { display: contents; }
+body[data-menu="orbit"] .launch-btn {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 72px;
+  padding: 8px 4px;
+  margin: 0;
+  transform: rotate(var(--a, 0deg)) translate(88px) rotate(calc(var(--a, 0deg) * -1)) translate(-50%, -50%);
+  transform-origin: center;
+}
+
+body[data-menu="terminal"] .nav-canvas {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 14px;
+  font-family: 'Space Mono', monospace;
+}
+body[data-menu="terminal"] .nav-cat { color: var(--accent2); }
+body[data-menu="terminal"] .nav-items { display: flex; flex-direction: column; gap: 4px; }
+body[data-menu="terminal"] .launch-btn {
+  flex-direction: row;
+  justify-content: flex-start;
+  padding: 8px 10px;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+}
+body[data-menu="terminal"] .launch-btn .icon { font-size: 1rem; }
+
+.launch-btn[hidden] { display: none !important; }
+
+body[data-theme="day"] .player-pill,
+body[data-theme="day"] .player {
+  background: rgba(255, 255, 255, 0.82);
+}
+
+@media (max-width: 768px) {
+  body[data-menu="bento"] .nav-canvas,
+  body[data-menu="sidebar"] .nav-canvas {
+    grid-template-columns: 1fr;
+  }
+  body[data-menu="orbit"] .nav-group {
+    width: 190px;
+    height: 190px;
+  }
+}
