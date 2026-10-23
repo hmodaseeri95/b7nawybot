@@ -42,6 +42,24 @@ body[data-theme="night"] {
 /* ── التنسيقات الأساسية ── */
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
+#space-canvas {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center, #102418 0%, #050a07 70%);
+}
+
+body.space-on {
+  background: transparent;
+}
+
+body.space-on #bg-canvas {
+  opacity: 0;
+}
+
 body { 
   background: var(--bg); 
   color: var(--text); 

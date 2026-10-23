@@ -8,6 +8,7 @@
 </head>
 <body data-theme="day" data-menu="tiles">
 
+<canvas id="space-canvas"></canvas>
 <div id="dynamic-bg"></div>
 
 <canvas id="bg-canvas"></canvas>
@@ -428,5 +429,14 @@ window.onload = function() {
 };
 </script>
 <script src="/static/jojo.js"></script>
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.170.0/build/three.module.js",
+    "three/addons/": "https://unpkg.com/three@0.170.0/examples/jsm/"
+  }
+}
+</script>
+<script type="module" src="/static/space-bg.js"></script>
 </body>
 </html>
