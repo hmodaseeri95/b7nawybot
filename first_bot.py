@@ -1,3 +1,4 @@
+import asyncio
 import datetime
 import logging
 import os
@@ -152,7 +153,7 @@ async def help_command(interaction: discord.Interaction):
     )
     embed.add_field(
         name="إدارة",
-        value="`/clear` `/ban` `/unban` `/kick` `/timeout` `/untimeout` `/lock` `/unlock` `/slowmode`",
+        value="`/clear` `/clearall` `/ban` `/unban` `/kick` `/timeout` `/untimeout` `/lock` `/unlock` `/slowmode`",
         inline=False,
     )
     embed.add_field(
@@ -228,6 +229,92 @@ async def clear(interaction: discord.Interaction, amount: app_commands.Range[int
     await interaction.response.defer(ephemeral=True)
     deleted = await interaction.channel.purge(limit=amount)
     await interaction.followup.send(f"تم حذف **{len(deleted)}** رسالة.", ephemeral=True)
+
+
+class ConfirmClearAll(discord.ui.View):
+    def __init__(self, author_id: int):
+        super().__init__(timeout=30)
+        self.author_id = author_id
+        self.confirmed: bool | None = None
+
+    async def interaction_check(self, interaction: discord.Interaction) -> bool:
+        if interaction.user.id != self.author_id:
+            await interaction.response.send_message("هذا الزر مو لك.", ephemeral=True)
+            return False
+        return True
+
+    @discord.ui.button(label="تأكيد مسح الروم", style=discord.ButtonStyle.danger)
+    async def confirm(self, interaction: discord.Interaction, _button: discord.ui.Button):
+        self.confirmed = True
+        for item in self.children:
+            item.disabled = True
+        await interaction.response.edit_message(content="جاري مسح الروم...", view=self)
+        self.stop()
+
+    @discord.ui.button(label="إلغاء", style=discord.ButtonStyle.secondary)
+    async def cancel(self, interaction: discord.Interaction, _button: discord.ui.Button):
+        self.confirmed = False
+        for item in self.children:
+            item.disabled = True
+        await interaction.response.edit_message(content="تم إلغاء المسح.", view=self)
+        self.stop()
+
+
+@bot.tree.command(name="clearall", description="مسح كل رسائل الروم الحالي")
+@app_commands.checks.has_permissions(manage_messages=True)
+@app_commands.checks.bot_has_permissions(manage_messages=True)
+async def clearall(interaction: discord.Interaction):
+    if not is_text_channel(interaction.channel):
+        await interaction.response.send_message("هذا الأمر للشات النصي فقط.", ephemeral=True)
+        return
+
+    view = ConfirmClearAll(interaction.user.id)
+    await interaction.response.send_message(
+        "هذا بيمسح **كل رسائل الروم**. الرسائل الأقدم من 14 يوم تنحذف واحدة واحدة وقد تاخذ وقت.\n"
+        "تأكد إنك في الروم الصح، بعدين اضغط تأكيد.",
+        view=view,
+        ephemeral=True,
+    )
+    await view.wait()
+    if view.confirmed is not True:
+        return
+
+    channel = interaction.channel
+    deleted_count = 0
+    old_count = 0
+
+    while True:
+        batch = await channel.purge(limit=100)
+        if not batch:
+            break
+        deleted_count += len(batch)
+        if deleted_count >= 5000:
+            await interaction.followup.send(
+                f"وقفت عند **{deleted_count}** رسالة عشان ما يطول الأمر زيادة. شغّل `/clearall` مرة ثانية لإكمال الباقي.",
+                ephemeral=True,
+            )
+            return
+        await asyncio.sleep(1)
+
+    leftovers = [message async for message in channel.history(limit=100)]
+    while leftovers:
+        for message in leftovers:
+            try:
+                await message.delete()
+                old_count += 1
+            except discord.HTTPException:
+                continue
+            await asyncio.sleep(0.7)
+            if deleted_count + old_count >= 5000:
+                await interaction.followup.send(
+                    f"تم حذف **{deleted_count + old_count}** رسالة ووقفت عند الحد. شغّل `/clearall` مرة ثانية لإكمال الباقي.",
+                    ephemeral=True,
+                )
+                return
+        leftovers = [message async for message in channel.history(limit=100)]
+
+    total = deleted_count + old_count
+    await interaction.followup.send(f"تم مسح الروم. انحذف **{total}** رسالة.", ephemeral=True)
 
 
 @bot.tree.command(name="calc", description="حساب النسبة المئوية: كم part من total؟")
