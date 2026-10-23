@@ -261,16 +261,16 @@
     <div id="jojo" class="tool-card hidden" style="direction: rtl;">
       <div class="tool-header" style="direction: ltr;">
         <button class="close-btn" onclick="toggle('jojo')">✕</button>
-        <span class="tool-title">🌀 موسوعة JoJo's Bizarre Adventure</span>
+        <span class="tool-title">موسوعة جوجو</span>
       </div>
-      <div id="jojo-tabs" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;"></div>
-      <div id="jojo-story" style="background:var(--bg3); border:1px solid var(--border); padding:16px; border-radius:12px; margin-bottom:16px; font-size:0.85rem; line-height:1.8; color:var(--text);"></div>
-      
-      <h3 style="font-size:1rem; color:var(--accent); margin-bottom:10px; border-bottom:1px solid var(--border); padding-bottom:5px;">الشخصيات الرئيسية</h3>
-      <div id="jojo-chars" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px; margin-bottom: 20px;"></div>
-
-      <h3 style="font-size:0.9rem; color:var(--accent2); margin-bottom:10px; border-bottom:1px solid var(--border); padding-bottom:5px;">الشخصيات الجانبية</h3>
-      <div id="jojo-side-chars" style="display:flex; flex-direction:column; gap:8px;"></div>
+      <p class="jojo-lead">ثمانية أجزاء، شخصيات أكثر، وبطاقات أصلية لكل واحد. الوصف فيه حرق؛ يظهر بعد التأكيد.</p>
+      <input class="jojo-search" id="jojo-search" type="search" placeholder="ابحث عن شخصية أو ستاند..." oninput="jojoFilter(this.value)">
+      <div id="jojo-tabs"></div>
+      <div id="jojo-story" class="jojo-story"></div>
+      <h3 class="jojo-heading">الشخصيات الرئيسية</h3>
+      <div id="jojo-chars" class="jojo-grid"></div>
+      <h3 class="jojo-heading">شخصيات إضافية</h3>
+      <div id="jojo-side-chars" class="jojo-list"></div>
     </div>
 
     <div id="about" class="tool-card hidden">
@@ -326,13 +326,13 @@
     </div>
     <div id="jojo-modal-body" class="blurred">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;"><h2 id="modal-char-name" style="color: var(--accent);">اسم الشخصية</h2><button class="close-btn" onclick="closeJojoModal()">✕</button></div>
-      <div id="modal-main-img-container" style="width: 100%; height: 250px; background: var(--bg2); border-radius: 12px; overflow: hidden; margin-bottom: 15px;"><img id="modal-char-img" src="" style="width: 100%; height: 100%; object-fit: contain;"></div>
-      <div id="modal-extra-imgs" class="grid3" style="gap: 10px; margin-bottom: 15px; display: none;">
-        <img id="modal-ex-1" src="" style="width: 100%; height: 80px; object-fit: cover; border-radius: 8px; border: 1px solid var(--border);">
-        <img id="modal-ex-2" src="" style="width: 100%; height: 80px; object-fit: cover; border-radius: 8px; border: 1px solid var(--border);">
-        <img id="modal-ex-3" src="" style="width: 100%; height: 80px; object-fit: cover; border-radius: 8px; border: 1px solid var(--border);">
+      <div id="modal-main-img-container" class="jojo-modal-art"><img id="modal-char-img" alt=""></div>
+      <div class="jojo-meta">
+        <span id="modal-char-role"></span>
+        <span id="modal-char-align"></span>
+        <span id="modal-char-stand"></span>
       </div>
-      <div style="background: var(--bg3); padding: 15px; border-radius: 12px; border: 1px solid var(--border);"><h4 style="color: var(--text); margin-bottom: 8px;">وصف الشخصية:</h4><p id="modal-char-desc" style="font-size: 0.85rem; line-height: 1.8; color: var(--muted);"></p></div>
+      <div style="background: var(--bg3); padding: 15px; border-radius: 12px; border: 1px solid var(--border);"><h4 style="color: var(--text); margin-bottom: 8px;">الوصف</h4><p id="modal-char-desc" style="font-size: 0.85rem; line-height: 1.8; color: var(--muted);"></p></div>
     </div>
   </div>
 </div>
@@ -384,7 +384,6 @@ function openNavGroup(el) {
   document.querySelectorAll('.nav-group').forEach(item => item.classList.toggle('open', item === group));
 }
 document.addEventListener('keydown', function(event) { if (event.key === 'h' || event.key === 'H') { if (event.target.tagName !== 'INPUT' && event.target.tagName !== 'TEXTAREA' && event.target.tagName !== 'SELECT') { const launcher = document.querySelector('.nav-root'); if (launcher) { launcher.style.display = (launcher.style.display === 'none') ? '' : 'none'; } } } });
-document.addEventListener('click', function() { if (!isPlaying && document.getElementById('audio')) { togglePlay(); } }, { once: true });
 
 function showToast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2500); }
 function copyText(id, isInput=false) { const el = document.getElementById(id); const text = isInput ? el.value : el.textContent; navigator.clipboard.writeText(text).then(() => showToast('Copied to clipboard!')); }
@@ -421,172 +420,6 @@ const tracks = [ { name: 'lofi hip hop ~ chill beats', sub: 'jojo lofi 1', url: 
 
 const MC_ITEMS = [ { id:'diamond_sword', name:'Diamond Sword', icon:'💎', type:'sword' }, { id:'netherite_sword', name:'Netherite Sword', icon:'🔥', type:'sword' } ]; const MC_ENCHANTS = { sword: [['sharpness',5],['smite',5],['unbreaking',3],['mending',1]] }; let mcSelected = null; function mcFilter() { const q = document.getElementById('mc-search').value.toLowerCase(); const sug = document.getElementById('mc-suggestions'); if (!q) { sug.style.display = 'none'; return; } const matches = MC_ITEMS.filter(i => i.id.includes(q) || i.name.toLowerCase().includes(q)); if (!matches.length) { sug.style.display = 'none'; return; } sug.style.display = 'block'; sug.innerHTML = matches.map(i => `<div onclick="mcSelectItem('${i.id}')" style="padding:8px;cursor:pointer;">${i.icon} ${i.name}</div>`).join(''); } function mcSelectItem(id) { mcSelected = MC_ITEMS.find(i => i.id === id); document.getElementById('mc-suggestions').style.display = 'none'; document.getElementById('mc-item-icon').textContent = mcSelected.icon; document.getElementById('mc-item-name').textContent = mcSelected.name; document.getElementById('mc-item-selected').style.display = 'block'; const type = mcSelected.type; const enchants = MC_ENCHANTS[type] || []; document.getElementById('mc-enchants').innerHTML = enchants.map(([e, max]) => { const opts = Array.from({length: max}, (_,i) => `<option value="${i+1}">${i+1}</option>`).join(''); return `<div><input type="checkbox" id="ench_${e}" onchange="mcBuild()"> <label for="ench_${e}">${e}</label> <select id="lvl_${e}" onchange="mcBuild()">${opts}</select></div>`; }).join(''); mcBuild(); } function mcBuild() { if (!mcSelected) return; const count = parseInt(document.getElementById('mc-count').value) || 1; const customName = document.getElementById('mc-custom-name').value.trim(); const loreRaw = document.getElementById('mc-lore').value.trim(); let enchParts = []; (MC_ENCHANTS[mcSelected.type] || []).forEach(([e]) => { const cb = document.getElementById('ench_' + e); const lv = document.getElementById('lvl_' + e); if (cb && cb.checked) enchParts.push(`{id:"minecraft:${e}",lvl:${lv.value}}`); }); let parts = []; if (enchParts.length) parts.push(`Enchantments:[${enchParts.join(',')}]`); if (customName) parts.push(`display:{Name:'{"text":"${customName}"}'}`); let nbt = parts.length ? `{${parts.join(',')}}` : ''; document.getElementById('mc-cmd').textContent = `/give @p minecraft:${mcSelected.id}${nbt} ${count}`; } function mcReset() { mcSelected = null; document.getElementById('mc-item-selected').style.display = 'none'; document.getElementById('mc-cmd').textContent = 'اختر آيتم أولاً'; }
 
-/* ═══════════════════════════════════════════════
-   JOJO WIKI DATA (All 8 Parts + Characters)
-═══════════════════════════════════════════════ */
-const JOJO_DATA = [
-  {
-    part: 'الجزء 1: Phantom Blood', year: '1880 — إنجلترا', color: '#1a237e', story: 'تبدأ الملحمة بصراع النبيل جوناثان جوستار مع أخيه بالتبني ديو براندو، الذي يستخدم قناعاً حجرياً ليتحول إلى مصاص دماء.',
-    chars: [
-      { name: 'جوناثان جوستار', role: 'البطل الرئيسي', align: 'طيب', img: 'static/jonathan.jpg', longDesc: 'الابن النبيل لعائلة جوستار. يمتلك قلباً نقياً وإرادة من حديد، يستخدم طاقة "التموج" (Hamon) للقضاء على الظلام.' },
-      { name: 'ديو براندو', role: 'الخصم الرئيسي', align: 'شرير', img: 'static/dio_p1.jpg', longDesc: 'شاب طموح وخبيث. يسعى لتدمير عائلة جوستار والاستيلاء على ثروتهم، ويتحول لمصاص دماء قوي.' },
-    ],
-    sideChars: [
-      { name: 'ويل إي. زيبيلي', role: 'معلم ورفيق', img: 'static/zeppeli.jpg', desc: 'معلم جوناثان في فنون التموج.' },
-      { name: 'سبيدواغون', role: 'صديق وداعم', img: 'static/speedwagon.jpg', desc: 'لص شوارع مخلص، أسس مؤسسة تدعم عائلة جوستار لاحقاً.' },
-      { name: 'جاك السفاح', role: 'شرير ثانوي', img: 'static/jack.jpg', desc: 'قاتل متسلسل كلفه ديو باغتيال جوناثان.' },
-      { name: 'تاركوس وبروفورد', role: 'فرسان ظلام', img: 'static/knights.jpg', desc: 'فرسان أسطوريين تم إحياؤهم كزومبي.' }
-    ]
-  },
-  {
-    part: 'الجزء 2: Battle Tendency', year: '1938 — أمريكا', color: '#2e7d32', story: 'يواجه جوزيف (حفيد جوناثان) كائنات قديمة تُعرف بـ "رجال العمود" يسعون للحصول على جوهرة أجا المكسوة ليكونوا كائنات مطلقة.',
-    chars: [
-      { name: 'جوزيف جوستار', role: 'البطل الرئيسي', align: 'طيب', img: 'static/joseph_p2.jpg', longDesc: 'شاب ذكي، ماكر ومرح. يعتمد على الخداع الاستراتيجي والتنبؤ بحركات الخصم بدلاً من القوة الغاشمة.' },
-      { name: 'كارس', role: 'الخصم الرئيسي', align: 'شرير', img: 'static/kars.jpg', longDesc: 'زعيم رجال العمود ومبتكر القناع الحجري. يسعى للتغلب على الشمس والوصول للكمال.' },
-    ],
-    sideChars: [
-      { name: 'سيزار زيبيلي', role: 'صديق ورفيق', img: 'static/caesar.jpg', desc: 'حفيد ويل زيبيلي، محترف في استخدام التموج بأسلوب الفقاعات.' },
-      { name: 'ليزا ليزا', role: 'معلمة', img: 'static/lisalisa.jpg', desc: 'معلمة جوزيف وسيزار، وخبيرة صارمة في التموج.' },
-      { name: 'سترونهيم', role: 'حليف مؤقت', img: 'static/stroheim.jpg', desc: 'جندي آلي ألماني ساعد جوزيف ضد رجال العمود.' },
-      { name: 'وامو و إيسيديسي', role: 'أعداء رئيسيون', img: 'static/wamuu.jpg', desc: 'محاربان من رجال العمود، يتميزان بالشرف والقوة.' }
-    ]
-  },
-  {
-    part: 'الجزء 3: Stardust Crusaders', year: '1989 — اليابان إلى مصر', color: '#fbc02d', story: 'تظهر قوة الـ "ستاند". ينطلق جوتارو ورفاقه في رحلة إلى مصر للقضاء على ديو العائد، لإنقاذ والدة جوتارو.',
-    chars: [
-      { name: 'جوتارو كوجو', role: 'البطل الرئيسي', align: 'طيب', img: 'static/jotaro.jpg', longDesc: 'طالب ثانوية هادئ وصلب. يمتلك ستاند "ستار بلاتينوم" الذي يتميز بالسرعة والقوة الهائلة والقدرة على إيقاف الزمن.' },
-      { name: 'ديو (DIO)', role: 'الخصم الرئيسي', align: 'شرير', img: 'static/dio_p3.jpg', longDesc: 'عاد بجسد جوناثان. يمتلك ستاند "ذا وورلد" القادر على إيقاف الزمن بالكامل.' },
-    ],
-    sideChars: [
-      { name: 'جوزيف جوستار', role: 'رفيق', img: 'static/joseph_p3.jpg', desc: 'الجد، يمتلك ستاند "هيرميت بيربل" للتصوير الروحي.' },
-      { name: 'كاكيوين', role: 'رفيق', img: 'static/kakyoin.jpg', desc: 'يمتلك ستاند "هايروفانت غرين" بعيد المدى.' },
-      { name: 'بولناريف', role: 'رفيق', img: 'static/polnareff.jpg', desc: 'مبارز فرنسي، ستانده "سيلفر تشاريوت".' },
-      { name: 'أفدول', role: 'رفيق', img: 'static/avdol.jpg', desc: 'يمتلك ستاند النار "ماجيشانز ريد".' },
-      { name: 'إيغي', role: 'رفيق (كلب)', img: 'static/iggy.jpg', desc: 'كلب ذكي يتحكم بالرمل بستاند "ذا فول".' },
-      { name: 'فانيلا آيس', role: 'عدو', img: 'static/vanillaice.jpg', desc: 'أتباع ديو المخلصين، ستانده "كريم" يبتلع الأبعاد.' }
-    ]
-  },
-  {
-    part: 'الجزء 4: Diamond is Unbreakable', year: '1999 — اليابان (موريو)', color: '#8e24aa', story: 'جوسكي يحمي مدينته الهادئة "موريو" من مستخدمي الستاند الأشرار وقاتل متسلسل غامض يعيش بينهم.',
-    chars: [
-      { name: 'جوسكي هيغاشيكاتا', role: 'البطل الرئيسي', align: 'طيب', img: 'static/josuke.jpg', longDesc: 'طالب ذو تسريحة مميزة. ستانده "كريزي دايموند" يستطيع إصلاح الأشياء وشفاء الجروح.' },
-      { name: 'يوشيكاغي كيرا', role: 'الخصم الرئيسي', align: 'شرير', img: 'static/kira.jpg', longDesc: 'قاتل متسلسل يطمح لحياة هادئة. ستانده "كيلر كوين" يحول أي شيء يلمسه إلى قنبلة.' },
-    ],
-    sideChars: [
-      { name: 'أوكوياسو', role: 'صديق', img: 'static/okuyasu.jpg', desc: 'ستانده "ذا هاند" يمسح المسافات والمساحات.' },
-      { name: 'كويتشي', role: 'صديق', img: 'static/koichi.jpg', desc: 'ستانده "إيكوز" يتطور وله قدرات صوتية ووزنية.' },
-      { name: 'روهان كيشيبي', role: 'حليف', img: 'static/rohan.jpg', desc: 'مانغاكا بستاند "هيفنز دور" يقرأ ذكريات الناس ككتاب.' },
-      { name: 'جوتارو كوجو', role: 'حليف', img: 'static/jotaro_p4.jpg', desc: 'جاء لموريو للتحقيق ومساعدة جوسكي.' },
-      { name: 'شيغيتشي', role: 'حليف مؤقت', img: 'static/shigechi.jpg', desc: 'طفل بستاند الحصاد "هارفست".' }
-    ]
-  },
-  {
-    part: 'الجزء 5: Golden Wind', year: '2001 — إيطاليا', color: '#fbc02d', story: 'جورنو جيوفانا ينضم لعصابة المافيا "باسوني" بهدف إسقاط زعيمها وإيقاف تجارة المخدرات.',
-    chars: [
-      { name: 'جورنو جيوفانا', role: 'البطل الرئيسي', align: 'طيب', img: 'static/giorno.jpg', longDesc: 'ابن ديو (من جسد جوناثان). ستانده "غولد إكسبيرينس" يعطي الحياة للأشياء.' },
-      { name: 'ديافولو', role: 'الخصم الرئيسي', align: 'شرير', img: 'static/diavolo.jpg', longDesc: 'زعيم المافيا الغامض. ستانده "كينغ كريمسون" يستطيع مسح الزمن وتوقع المستقبل.' },
-    ],
-    sideChars: [
-      { name: 'برونو بوتشيلاتي', role: 'قائد الفريق', img: 'static/bruno.jpg', desc: 'ستانده "ستيكي فينغرز" يصنع سحابات مكانية.' },
-      { name: 'ميستا', role: 'رفيق', img: 'static/mista.jpg', desc: 'قناص بستاند "سكس بيستس".' },
-      { name: 'نارانشيا', role: 'رفيق', img: 'static/narancia.jpg', desc: 'ستانده طائرة مقاتلة "آيروسميث".' },
-      { name: 'أباكيو', role: 'رفيق', img: 'static/abbacchio.jpg', desc: 'ستانده "مودي بلوز" يعيد تمثيل الماضي.' },
-      { name: 'تريش أونا', role: 'حليفة', img: 'static/trish.jpg', desc: 'ابنة الزعيم، ستاندها "سبايس غيرل".' },
-      { name: 'ريزوتو نيرو', role: 'عدو', img: 'static/risotto.jpg', desc: 'قائد فريق الاغتيالات، يتحكم بالحديد.' }
-    ]
-  },
-  {
-    part: 'الجزء 6: Stone Ocean', year: '2011 — أمريكا (سجن السلاحف)', color: '#1565c0', story: 'يتم سجن جولين (ابنة جوتارو) ظلماً. تكتشف أن سجنها مكيدة من قس يسعى لتنفيذ إرادة ديو.',
-    chars: [
-      { name: 'جولين كوجو', role: 'البطلة الرئيسية', align: 'طيب', img: 'static/jolyne.jpg', longDesc: 'ابنة جوتارو. ستاندها "ستون فري" يسمح لها بتحويل جسدها إلى خيوط قوية ومرنة.' },
-      { name: 'القس بوتشي', role: 'الخصم الرئيسي', align: 'شرير', img: 'static/pucci.jpg', longDesc: 'مخلص لديو. يسعى لسرقة ذكريات جوتارو وصناعة عالم يدرك فيه الجميع قدرهم المكتوب.' },
-    ],
-    sideChars: [
-      { name: 'إيرميس كوستيلو', role: 'صديقة', img: 'static/ermes.jpg', desc: 'ستاندها "كيس" يصنع نسخ من الأشياء بالملصقات.' },
-      { name: 'فو فايترز (F.F)', role: 'رفيقة', img: 'static/ff.jpg', desc: 'مستعمرة عوالق ذكية أخذت هيئة بشرية.' },
-      { name: 'ويذر ريبورت', role: 'حليف', img: 'static/weather.jpg', desc: 'فاقد للذاكرة يتحكم بالطقس.' },
-      { name: 'أناسوي', role: 'حليف', img: 'static/anasui.jpg', desc: 'ستانده "دايفر داون" يغوص داخل الهياكل لتعديلها.' },
-      { name: 'جوتارو كوجو', role: 'والد جولين', img: 'static/jotaro_p6.jpg', desc: 'يحاول إنقاذ ابنته من الفخ.' }
-    ]
-  },
-  {
-    part: 'الجزء 7: Steel Ball Run', year: '1890 — أمريكا (عالم بديل)', color: '#d84315', story: 'سباق خيول عبر القارة الأمريكية يتحول لسباق لجمع أجزاء جثة مقدسة تمنح طاقة خارقة للرئيس الأمريكي.',
-    chars: [
-      { name: 'جوني جوستار', role: 'البطل الرئيسي', align: 'طيب', img: 'static/johnny.jpg', longDesc: 'فارس مشلول. يتعلم "الدوران" ليتمكن من المشي مجدداً. ستانده "تاسك" يتطور ويطلق أظافره كرصاص.' },
-      { name: 'فاني فالنتاين', role: 'الخصم الرئيسي', align: 'شرير', img: 'static/valentine.jpg', longDesc: 'رئيس أمريكا. ستانده "ديرتي ديدز" يسمح له بالتنقل بين الأبعاد الموازية.' },
-    ],
-    sideChars: [
-      { name: 'جايرو زيبيلي', role: 'صديق ومعلم', img: 'static/gyro.jpg', desc: 'فارس يستخدم الكرات الفولاذية والدوران.' },
-      { name: 'دييغو براندو', role: 'منافس', img: 'static/diego.jpg', desc: 'نسخة ديو في هذا العالم، ستانده يحوله لديناصور.' },
-      { name: 'هوت بانتس', role: 'متسابقة', img: 'static/hotpants.jpg', desc: 'تستخدم بخاخ لحم لتعديل الأجساد والوجوه.' },
-      { name: 'رينغو روداغين', role: 'عدو نبيل', img: 'static/ringo.jpg', desc: 'حامل ستاند "ماندام" الذي يرجع الزمن 6 ثوانٍ.' },
-      { name: 'لوسي ستيل', role: 'حليفة', img: 'static/lucy.jpg', desc: 'زوجة منظم السباق وتلعب دوراً محورياً بالقصة.' }
-    ]
-  },
-  {
-    part: 'الجزء 8: JoJolion', year: '2011 — اليابان (موريو البديلة)', color: '#e91e63', story: 'شاب فاقد للذاكرة يُعثر عليه مدفوناً، تحاول عائلة هيغاشيكاتا تبنيه بينما يبحث عن هويته وسط مؤامرة فواكه الروكاكاكا.',
-    chars: [
-      { name: 'جوسكي (غابي)', role: 'البطل الرئيسي', align: 'طيب', img: 'static/gappy.jpg', longDesc: 'يمتلك 4 خصيات لأنه اندماج بين شخصين. ستانده "سوفت آند ويت" يسرق خصائص الأشياء عبر الفقاعات.' },
-      { name: 'تورو', role: 'الخصم الرئيسي', align: 'شرير', img: 'static/tooru.jpg', longDesc: 'كائن صخري. ستانده "وندر أوف يو" يسبب كوارث "كرمية" لأي شخص يحاول ملاحقته أو كشفه.' },
-    ],
-    sideChars: [
-      { name: 'ياسوهو هيروسي', role: 'صديقة وحبيبة', img: 'static/yasuho.jpg', desc: 'ستاندها "بيزلي بارك" للتوجيه والاختراق الإلكتروني.' },
-      { name: 'جوبين هيغاشيكاتا', role: 'عدو / حليف', img: 'static/jobin.jpg', desc: 'الابن الأكبر، يسعى لإنقاذ عائلته بأي ثمن.' },
-      { name: 'راي ماميزوكو', role: 'حليف', img: 'static/rai.jpg', desc: 'خبير زراعي، ستانده يفكك جسده لأسلاك.' },
-      { name: 'نوريسكي هيغاشيكاتا', role: 'حليف', img: 'static/norisuke.jpg', desc: 'رب الأسرة، يدعم جوسكي بستاند يقتفي الأثر.' },
-      { name: 'جوشو هيغاشيكاتا', role: 'أخ بالتبني', img: 'static/joshu.jpg', desc: 'ستانده "نات كينغ كول" يفكك الأشياء بمسامير.' }
-    ]
-  }
-];
-
-let jojoPart = 0;
-function jojoRender() {
-  const tabs = document.getElementById('jojo-tabs');
-  tabs.innerHTML = JOJO_DATA.map((p, i) => `<button onclick="jojoSetPart(${i})" style="background:${i===jojoPart ? p.color+'33' : 'var(--bg3)'};border:1px solid ${i===jojoPart ? p.color : 'var(--border)'};padding:8px 14px;border-radius:8px;cursor:pointer;color:var(--text);font-size:0.8rem;font-weight:bold;">${p.part}</button>`).join('');
-  const part = JOJO_DATA[jojoPart];
-  document.getElementById('jojo-story').innerHTML = `<div style="font-weight:bold; color:${part.color}; font-size:1.1rem; margin-bottom:8px;">📖 ${part.part}</div><div>${part.story}</div>`;
-  
-  // الرئيسية
-  document.getElementById('jojo-chars').innerHTML = part.chars.map((c, idx) => `
-    <div onclick="openJojoModal('main', ${jojoPart}, ${idx})" style="background:var(--bg3);border:1px solid var(--border);border-radius:12px;overflow:hidden;cursor:pointer;">
-      <div style="height:160px;background:var(--bg);"><img src="${c.img}" style="height:100%;width:100%;object-fit:cover;object-position:top" onerror="this.src=''"></div>
-      <div style="padding:10px;"><div style="font-size:0.85rem;font-weight:700;color:var(--text);">${c.name}</div><div style="font-size:0.75rem;color:var(--muted);">${c.role}</div></div>
-    </div>`).join('');
-  
-  // الجانبية
-  const sideGrid = document.getElementById('jojo-side-chars');
-  if(part.sideChars && part.sideChars.length > 0) {
-    sideGrid.innerHTML = part.sideChars.map((sc, idx) => `
-      <div onclick="openJojoModal('side', ${jojoPart}, ${idx})" style="display:flex;align-items:center;gap:10px;background:var(--bg2);border:1px solid var(--border);padding:8px;border-radius:8px;cursor:pointer;">
-        <img src="${sc.img}" style="width:40px;height:40px;border-radius:50%;object-fit:cover;border:1px solid var(--accent);" onerror="this.src=''">
-        <div><div style="font-size:0.8rem;font-weight:bold;color:var(--text);">${sc.name}</div><div style="font-size:0.7rem;color:var(--muted);">${sc.role}</div></div>
-      </div>`).join('');
-  } else { sideGrid.innerHTML = '<div style="font-size:0.75rem; color:var(--muted);">لا توجد شخصيات.</div>'; }
-}
-function jojoSetPart(i) { jojoPart = i; jojoRender(); }
-
-function openJojoModal(type, pIdx, cIdx) {
-  const char = type === 'main' ? JOJO_DATA[pIdx].chars[cIdx] : JOJO_DATA[pIdx].sideChars[cIdx];
-  document.getElementById('modal-char-name').textContent = char.name;
-  document.getElementById('modal-char-img').src = char.img;
-  document.getElementById('modal-char-desc').textContent = type === 'main' ? char.longDesc : char.desc;
-  const extraImgsDiv = document.getElementById('modal-extra-imgs');
-  if (type === 'main' && char.extraImgs) {
-    extraImgsDiv.style.display = 'grid';
-    document.getElementById('modal-ex-1').src = char.extraImgs[0] || '';
-    document.getElementById('modal-ex-2').src = char.extraImgs[1] || '';
-    document.getElementById('modal-ex-3').src = char.extraImgs[2] || '';
-  } else { extraImgsDiv.style.display = 'none'; }
-  document.getElementById('jojo-modal-body').classList.add('blurred');
-  document.getElementById('spoiler-warning').style.display = 'flex';
-  document.getElementById('jojo-modal').classList.remove('hidden');
-  setTimeout(() => document.getElementById('jojo-modal').classList.add('show'), 10);
-}
-function acceptSpoiler() { document.getElementById('spoiler-warning').style.display = 'none'; document.getElementById('jojo-modal-body').classList.remove('blurred'); }
-function closeJojoModal() { document.getElementById('jojo-modal').classList.remove('show'); setTimeout(() => document.getElementById('jojo-modal').classList.add('hidden'), 300); }
-const _origToggle = toggle;
-window.toggle = function(id) { _origToggle(id); if (id === 'jojo' && !document.getElementById('jojo').classList.contains('hidden')) jojoRender(); };
-// تفعيل تحميل أدوات التصنيف
 window.onload = function() {
   loadUnitCat();
   loadNote();
@@ -594,5 +427,6 @@ window.onload = function() {
   setMenu(localStorage.getItem('sevenawy-menu') || 'tiles');
 };
 </script>
+<script src="/static/jojo.js"></script>
 </body>
 </html>

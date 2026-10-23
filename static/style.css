@@ -1169,6 +1169,60 @@ body[data-theme="day"] .player {
   background: rgba(255, 255, 255, 0.82);
 }
 
+.jojo-lead { color: var(--muted); font-size: 0.85rem; margin-bottom: 12px; line-height: 1.7; }
+.jojo-search { margin-bottom: 12px; }
+#jojo-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
+.jojo-tab {
+  border: 1px solid var(--border);
+  background: var(--bg3);
+  color: var(--text);
+  border-radius: 12px;
+  padding: 8px 12px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  font-family: inherit;
+}
+.jojo-tab small { color: var(--muted); font-size: 0.68rem; }
+.jojo-tab.active {
+  border-color: var(--part, var(--accent));
+  background: color-mix(in srgb, var(--part, var(--accent)) 16%, var(--card));
+}
+.jojo-story {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 16px;
+  margin-bottom: 16px;
+  line-height: 1.85;
+}
+.jojo-story-kicker { font-size: 0.75rem; margin-bottom: 6px; }
+.jojo-heading { color: var(--accent); margin: 16px 0 10px; font-size: 1rem; }
+.jojo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
+.jojo-card, .jojo-row {
+  border: 1px solid var(--border);
+  background: var(--card);
+  border-radius: 14px;
+  overflow: hidden;
+  cursor: pointer;
+  color: inherit;
+  font-family: inherit;
+  text-align: right;
+}
+.jojo-card img { width: 100%; height: 170px; object-fit: cover; display: block; }
+.jojo-card div, .jojo-row div { padding: 10px; display: flex; flex-direction: column; gap: 4px; }
+.jojo-card span, .jojo-row span { color: var(--muted); font-size: 0.75rem; }
+.jojo-list { display: flex; flex-direction: column; gap: 8px; }
+.jojo-row { display: flex; align-items: center; gap: 10px; padding: 6px; }
+.jojo-row img { width: 56px; height: 56px; border-radius: 12px; object-fit: cover; }
+.jojo-empty { color: var(--muted); font-size: 0.85rem; }
+.jojo-modal-art { width: 100%; height: 220px; background: var(--bg2); border-radius: 12px; overflow: hidden; margin-bottom: 12px; }
+.jojo-modal-art img { width: 100%; height: 100%; object-fit: cover; }
+.jojo-meta { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+.jojo-meta span { background: var(--bg3); border: 1px solid var(--border); border-radius: 999px; padding: 4px 10px; font-size: 0.75rem; }
+
 @media (max-width: 768px) {
   body[data-menu="bento"] .nav-canvas,
   body[data-menu="sidebar"] .nav-canvas {
