@@ -9,6 +9,8 @@ from discord import app_commands
 from discord.ext import commands
 from flask import Flask, render_template
 
+from extra_commands import GUIDE, register as register_extra_commands
+
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
@@ -39,6 +41,7 @@ intents.members = True
 intents.guilds = True
 
 bot = commands.Bot(command_prefix="!", intents=intents, help_command=None)
+register_extra_commands(bot)
 
 
 def is_text_channel(channel) -> bool:
@@ -86,7 +89,7 @@ async def on_ready():
     except Exception:
         log.exception("Failed to sync slash commands")
     await bot.change_presence(
-        activity=discord.Activity(type=discord.ActivityType.watching, name="/help")
+        activity=discord.Activity(type=discord.ActivityType.watching, name="/guide")
     )
 
 
@@ -148,20 +151,17 @@ async def count_below_error(ctx: commands.Context, error):
 async def help_command(interaction: discord.Interaction):
     embed = discord.Embed(
         title="أوامر البوت",
-        description="أوامر slash تبدأ بـ `/`. العد السريع للرسائل: `!count_below` بالرد على رسالة.",
+        description=(
+            f"عدد الأوامر: **{len(GUIDE)}**\n"
+            "كل القائمة: `/commands`\n"
+            "شرح أمر واحد: `/guide` واختر الاسم.\n"
+            "عد الرسائل بالرد: `!count_below`"
+        ),
         color=discord.Color.blurple(),
     )
-    embed.add_field(
-        name="إدارة",
-        value="`/clear` `/clearall` `/ban` `/unban` `/kick` `/timeout` `/untimeout` `/lock` `/unlock` `/slowmode`",
-        inline=False,
-    )
-    embed.add_field(
-        name="معلومات",
-        value="`/ping` `/userinfo` `/serverinfo` `/avatar` `/scan` `/member`",
-        inline=False,
-    )
-    embed.add_field(name="أدوات", value="`/calc` `/say`", inline=False)
+    embed.add_field(name="شرح", value="`/help` `/guide` `/commands`", inline=False)
+    embed.add_field(name="إدارة", value="`/clear` `/clearall` `/ban` `/kick` `/timeout` `/warn` `/lock`", inline=False)
+    embed.add_field(name="معلومات", value="`/ping` `/userinfo` `/serverinfo` `/botinfo`", inline=False)
     await interaction.response.send_message(embed=embed, ephemeral=True)
 
 
