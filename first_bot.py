@@ -1,163 +1,439 @@
+import datetime
+import logging
+import os
+from threading import Thread
+
 import discord
 from discord import app_commands
 from discord.ext import commands
-import socket
-import requests
-import os
 from flask import Flask, render_template
-from threading import Thread
-import datetime # تمت إضافته لخصائص التايم أوت
 
-# إعداد الويب (الكود الأصلي)
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(name)s: %(message)s",
+)
+log = logging.getLogger("b7nawybot")
+
 app = Flask(__name__)
 
-@app.route('/')
+
+@app.route("/")
 def home():
-    return render_template('index.html')
+    return render_template("index.html")
+
+
+@app.route("/health")
+def health():
+    return {"status": "ok", "bot": getattr(bot.user, "name", None)}, 200
+
 
 def run_web():
-    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 8080)))
+    port = int(os.environ.get("PORT", 8080))
+    app.run(host="0.0.0.0", port=port, use_reloader=False)
 
-# إعداد البوت (الكود الأصلي)
+
 intents = discord.Intents.default()
 intents.message_content = True
-bot = commands.Bot(command_prefix='!', intents=intents)
+intents.members = True
+intents.guilds = True
+
+bot = commands.Bot(command_prefix="!", intents=intents, help_command=None)
+
+
+def is_text_channel(channel) -> bool:
+    return isinstance(channel, (discord.TextChannel, discord.Thread))
+
+
+def moderation_block_reason(
+    actor: discord.Member,
+    target: discord.Member,
+    me: discord.Member,
+) -> str | None:
+    if target.id == actor.id:
+        return "ما تقدر تطبق الأمر على نفسك."
+    if target.id == me.id:
+        return "ما أقدر أطبق الأمر على نفسي."
+    if target.id == actor.guild.owner_id:
+        return "ما ينفع تطبيق الأمر على صاحب السيرفر."
+    if target.top_role >= me.top_role:
+        return "رتبة هذا العضو أعلى من رتبتي أو مساوية لها. ارفع رتبة البوت فوقه."
+    if actor.id != actor.guild.owner_id and target.top_role >= actor.top_role:
+        return "رتبة هذا العضو أعلى من رتبتك أو مساوية لها."
+    return None
+
+
+async def safe_followup(interaction: discord.Interaction, content: str, ephemeral: bool = True):
+    if interaction.response.is_done():
+        await interaction.followup.send(content, ephemeral=ephemeral)
+    else:
+        await interaction.response.send_message(content, ephemeral=ephemeral)
+
 
 @bot.event
 async def on_ready():
-    await bot.tree.sync()
-    print(f'=== المساعد السيبراني {bot.user} يعمل الآن ===')
+    log.info("Logged in as %s (%s)", bot.user, bot.user.id if bot.user else "?")
+    try:
+        guild_id = os.environ.get("GUILD_ID")
+        if guild_id:
+            guild = discord.Object(id=int(guild_id))
+            bot.tree.copy_global_to(guild=guild)
+            synced = await bot.tree.sync(guild=guild)
+            log.info("Synced %s guild commands to %s", len(synced), guild_id)
+        else:
+            synced = await bot.tree.sync()
+            log.info("Synced %s global commands", len(synced))
+    except Exception:
+        log.exception("Failed to sync slash commands")
+    await bot.change_presence(
+        activity=discord.Activity(type=discord.ActivityType.watching, name="/help")
+    )
 
-# ==========================================
-# 🎯 الأمر المخصص الجديد: عد الرسائل للحذف
-# ==========================================
+
+@bot.tree.error
+async def on_app_command_error(
+    interaction: discord.Interaction, error: app_commands.AppCommandError
+):
+    if isinstance(error, app_commands.MissingPermissions):
+        missing = ", ".join(error.missing_permissions)
+        await safe_followup(interaction, f"ما عندك صلاحية: `{missing}`")
+        return
+    if isinstance(error, app_commands.BotMissingPermissions):
+        missing = ", ".join(error.missing_permissions)
+        await safe_followup(interaction, f"البوت ناقصه صلاحية: `{missing}`")
+        return
+    if isinstance(error, app_commands.CommandOnCooldown):
+        await safe_followup(interaction, f" Slow down. جرّب بعد {error.retry_after:.1f} ثانية.")
+        return
+    log.exception("Slash command error: %s", error)
+    await safe_followup(interaction, "صار خطأ غير متوقع. جرّب مرة ثانية بعد شوي.")
+
+
 @bot.command(name="count_below")
-async def count_below(ctx):
-    # للتحقق من أن المستخدم قام بعمل Reply على رسالة
+@commands.has_permissions(manage_messages=True)
+async def count_below(ctx: commands.Context):
     if not ctx.message.reference:
-        await ctx.reply("⚠️ يرجى الرد (Reply) على رسالة وكتابة هذا الأمر لمعرفة عدد الرسائل تحتها.")
+        await ctx.reply("رد على رسالة ثم اكتب `!count_below`.")
         return
 
     try:
-        # جلب الرسالة الأصلية التي تم الرد عليها
-        replied_message = await ctx.channel.fetch_message(ctx.message.reference.message_id)
-        
-        count = 0
-        # حساب كل الرسائل التي أتت بعد تلك الرسالة
-        async for msg in ctx.channel.history(limit=None, after=replied_message):
-            count += 1
-            
-        # نطرح 1 (وهي رسالة الأمر !count_below التي كتبتها أنت للتو) لكي نعطيك العدد الدقيق للرسائل المقصودة
-        actual_count = count - 1 if count > 0 else 0
-        
-        await ctx.reply(f"⬇️ يوجد **{actual_count}** رسالة تحت الرسالة المحددة.\n💡 تلميح: إذا أردت حذف هذه الرسائل مع الرسالة المحددة، استخدم الأمر: `/clear {actual_count + 1}`")
-    except Exception as e:
-        await ctx.reply(f"❌ حدث خطأ أثناء الحساب: {e}")
+        replied = await ctx.channel.fetch_message(ctx.message.reference.message_id)
+    except discord.NotFound:
+        await ctx.reply("ما لقيت الرسالة اللي رديت عليها.")
+        return
 
-# ==========================================
-# 📦 الأوامر الأصلية الخاصة بك (بدون أي تعديل)
-# ==========================================
-@bot.tree.command(name="scan", description="فحص المنافذ")
-async def scan(interaction: discord.Interaction, target_ip: str):
-    await interaction.response.send_message(f"جارٍ فحص `{target_ip}`...")
+    count = 0
+    async for _ in ctx.channel.history(limit=500, after=replied):
+        count += 1
 
-@bot.tree.command(name="osint", description="جمع معلومات النطاق")
-async def osint(interaction: discord.Interaction, domain: str):
-    await interaction.response.send_message(f"جاري جلب بيانات `{domain}`...")
+    actual = max(count - 1, 0)
+    extra = ""
+    if count >= 500:
+        extra = "\nتنبيه: وقفت العد عند 500 رسالة."
+    await ctx.reply(
+        f"فيه **{actual}** رسالة تحت الرسالة المحددة.\n"
+        f"للحذف استخدم `/clear` بعدد مناسب (حد أقصى 100 في كل مرة).{extra}"
+    )
 
-# حذف الرسائل بعدد معين
-@bot.tree.command(name="clear", description="حذف عدد معين من الرسائل")
+
+@count_below.error
+async def count_below_error(ctx: commands.Context, error):
+    if isinstance(error, commands.MissingPermissions):
+        await ctx.reply("تحتاج صلاحية Manage Messages.")
+        return
+    await ctx.reply(f"ما قدرت أعد الرسائل: {error}")
+
+
+@bot.tree.command(name="help", description="قائمة أوامر البوت")
+async def help_command(interaction: discord.Interaction):
+    embed = discord.Embed(
+        title="أوامر البوت",
+        description="أوامر slash تبدأ بـ `/`. العد السريع للرسائل: `!count_below` بالرد على رسالة.",
+        color=discord.Color.blurple(),
+    )
+    embed.add_field(
+        name="إدارة",
+        value="`/clear` `/ban` `/unban` `/kick` `/timeout` `/untimeout` `/lock` `/unlock` `/slowmode`",
+        inline=False,
+    )
+    embed.add_field(
+        name="معلومات",
+        value="`/ping` `/userinfo` `/serverinfo` `/avatar` `/scan` `/member`",
+        inline=False,
+    )
+    embed.add_field(name="أدوات", value="`/calc` `/say`", inline=False)
+    await interaction.response.send_message(embed=embed, ephemeral=True)
+
+
+@bot.tree.command(name="scan", description="فحص إعدادات السيرفر والصلاحيات")
+@app_commands.checks.has_permissions(manage_guild=True)
+async def scan(interaction: discord.Interaction):
+    guild = interaction.guild
+    if guild is None:
+        await interaction.response.send_message("هذا الأمر للسيرفرات فقط.", ephemeral=True)
+        return
+
+    me = guild.me
+    needed = {
+        "Manage Messages": me.guild_permissions.manage_messages,
+        "Ban Members": me.guild_permissions.ban_members,
+        "Kick Members": me.guild_permissions.kick_members,
+        "Moderate Members": me.guild_permissions.moderate_members,
+        "Manage Channels": me.guild_permissions.manage_channels,
+        "View Audit Log": me.guild_permissions.view_audit_log,
+    }
+    missing = [name for name, ok in needed.items() if not ok]
+    role_ok = bool(me.top_role and me.top_role.position > 1)
+
+    embed = discord.Embed(title=f"فحص سيرفر {guild.name}", color=discord.Color.teal())
+    embed.add_field(name="الأعضاء", value=str(guild.member_count), inline=True)
+    embed.add_field(name="مستوى التحقق", value=str(guild.verification_level), inline=True)
+    embed.add_field(name="رتبة البوت", value=me.top_role.mention if me.top_role else "—", inline=True)
+    embed.add_field(
+        name="صلاحيات البوت الناقصة",
+        value="لا يوجد" if not missing else "\n".join(f"- {item}" for item in missing),
+        inline=False,
+    )
+    embed.add_field(
+        name="ملاحظة الرتب",
+        value="رتبة البوت مرتفعة كفاية." if role_ok else "ارفع رتبة البوت فوق الأعضاء اللي تبي تديرهم.",
+        inline=False,
+    )
+    await interaction.response.send_message(embed=embed, ephemeral=True)
+
+
+@bot.tree.command(name="member", description="عرض معلومات عضو من السيرفر")
+async def member_info(interaction: discord.Interaction, user: discord.Member):
+    embed = discord.Embed(title=f"عضو: {user.display_name}", color=user.color or discord.Color.blue())
+    embed.set_thumbnail(url=user.display_avatar.url)
+    embed.add_field(name="الاسم", value=str(user), inline=True)
+    embed.add_field(name="الآيدي", value=str(user.id), inline=True)
+    embed.add_field(name="بوت؟", value="نعم" if user.bot else "لا", inline=True)
+    if user.joined_at:
+        embed.add_field(name="انضم", value=discord.utils.format_dt(user.joined_at, "f"), inline=False)
+    embed.add_field(name="أنشأ الحساب", value=discord.utils.format_dt(user.created_at, "f"), inline=False)
+    roles = [role.mention for role in user.roles if role != interaction.guild.default_role][-10:]
+    embed.add_field(name="الرتب", value=" ".join(reversed(roles)) or "بدون رتب", inline=False)
+    await interaction.response.send_message(embed=embed)
+
+
+@bot.tree.command(name="clear", description="حذف عدد معين من الرسائل (1-100)")
+@app_commands.describe(amount="عدد الرسائل للحذف، من 1 إلى 100")
 @app_commands.checks.has_permissions(manage_messages=True)
-async def clear(interaction: discord.Interaction, amount: int):
-    await interaction.channel.purge(limit=amount)
-    await interaction.response.send_message(f"✅ تم حذف {amount} رسالة.", ephemeral=True)
+@app_commands.checks.bot_has_permissions(manage_messages=True)
+async def clear(interaction: discord.Interaction, amount: app_commands.Range[int, 1, 100]):
+    if not is_text_channel(interaction.channel):
+        await interaction.response.send_message("هذا الأمر للشات النصي فقط.", ephemeral=True)
+        return
 
-# حاسبة النسبة المئوية
-@bot.tree.command(name="calc", description="حساب النسبة المئوية: كم X من Y؟")
+    await interaction.response.defer(ephemeral=True)
+    deleted = await interaction.channel.purge(limit=amount)
+    await interaction.followup.send(f"تم حذف **{len(deleted)}** رسالة.", ephemeral=True)
+
+
+@bot.tree.command(name="calc", description="حساب النسبة المئوية: كم part من total؟")
+@app_commands.describe(part="الجزء", total="الكل")
 async def calc(interaction: discord.Interaction, part: float, total: float):
+    if total == 0:
+        await interaction.response.send_message("ما ينفع القسمة على صفر.", ephemeral=True)
+        return
     percentage = (part / total) * 100
-    await interaction.response.send_message(f"📊 النسبة هي: {percentage:.2f}%")
+    await interaction.response.send_message(f"النسبة: **{percentage:.2f}%**")
 
-
-# ==========================================
-# 🌟 الإضافات الجديدة (أشهر خصائص البوتات العالمية)
-# ==========================================
-
-# --- 1. أوامر الإدارة المتقدمة (Moderation) ---
 
 @bot.tree.command(name="ban", description="حظر عضو من السيرفر")
+@app_commands.describe(member="العضو", reason="السبب", delete_days="حذف رسائله لآخر كم يوم (0-7)")
 @app_commands.checks.has_permissions(ban_members=True)
-async def ban(interaction: discord.Interaction, member: discord.Member, reason: str = "لا يوجد سبب"):
-    await member.ban(reason=reason)
-    await interaction.response.send_message(f"🔨 تم حظر {member.mention} بنجاح | السبب: {reason}")
+@app_commands.checks.bot_has_permissions(ban_members=True)
+async def ban(
+    interaction: discord.Interaction,
+    member: discord.Member,
+    reason: str = "لا يوجد سبب",
+    delete_days: app_commands.Range[int, 0, 7] = 0,
+):
+    block = moderation_block_reason(interaction.user, member, interaction.guild.me)
+    if block:
+        await interaction.response.send_message(block, ephemeral=True)
+        return
+    await member.ban(reason=reason, delete_message_days=delete_days)
+    await interaction.response.send_message(f"تم حظر {member.mention} | السبب: {reason}")
+
+
+@bot.tree.command(name="unban", description="إلغاء حظر عضو بالآيدي")
+@app_commands.describe(user_id="آيدي المستخدم المحظور")
+@app_commands.checks.has_permissions(ban_members=True)
+@app_commands.checks.bot_has_permissions(ban_members=True)
+async def unban(interaction: discord.Interaction, user_id: str):
+    if not user_id.isdigit():
+        await interaction.response.send_message("أرسل آيدي رقمي صحيح.", ephemeral=True)
+        return
+    user = discord.Object(id=int(user_id))
+    try:
+        await interaction.guild.unban(user)
+    except discord.NotFound:
+        await interaction.response.send_message("هذا المستخدم مو محظور أو الآيدي غلط.", ephemeral=True)
+        return
+    await interaction.response.send_message(f"تم إلغاء الحظر عن `{user_id}`.")
+
 
 @bot.tree.command(name="kick", description="طرد عضو من السيرفر")
+@app_commands.describe(member="العضو", reason="السبب")
 @app_commands.checks.has_permissions(kick_members=True)
-async def kick(interaction: discord.Interaction, member: discord.Member, reason: str = "لا يوجد سبب"):
+@app_commands.checks.bot_has_permissions(kick_members=True)
+async def kick(
+    interaction: discord.Interaction,
+    member: discord.Member,
+    reason: str = "لا يوجد سبب",
+):
+    block = moderation_block_reason(interaction.user, member, interaction.guild.me)
+    if block:
+        await interaction.response.send_message(block, ephemeral=True)
+        return
     await member.kick(reason=reason)
-    await interaction.response.send_message(f"👢 تم طرد {member.mention} بنجاح | السبب: {reason}")
+    await interaction.response.send_message(f"تم طرد {member.mention} | السبب: {reason}")
 
-@bot.tree.command(name="timeout", description="إسكات (تايم أوت) لعضو لمدة معينة")
+
+@bot.tree.command(name="timeout", description="إسكات عضو لمدة بالدقائق")
+@app_commands.describe(member="العضو", minutes="المدة بالدقائق (1 إلى 40320 = 28 يوم)", reason="السبب")
 @app_commands.checks.has_permissions(moderate_members=True)
-async def timeout(interaction: discord.Interaction, member: discord.Member, minutes: int, reason: str = "لا يوجد سبب"):
-    duration = datetime.timedelta(minutes=minutes)
-    await member.timeout(duration, reason=reason)
-    await interaction.response.send_message(f"⏱️ تم إعطاء تايم أوت لـ {member.mention} لمدة {minutes} دقيقة | السبب: {reason}")
+@app_commands.checks.bot_has_permissions(moderate_members=True)
+async def timeout(
+    interaction: discord.Interaction,
+    member: discord.Member,
+    minutes: app_commands.Range[int, 1, 40320],
+    reason: str = "لا يوجد سبب",
+):
+    block = moderation_block_reason(interaction.user, member, interaction.guild.me)
+    if block:
+        await interaction.response.send_message(block, ephemeral=True)
+        return
+    until = discord.utils.utcnow() + datetime.timedelta(minutes=minutes)
+    await member.timeout(until, reason=reason)
+    await interaction.response.send_message(
+        f"تايم أوت لـ {member.mention} لمدة **{minutes}** دقيقة | السبب: {reason}"
+    )
 
-@bot.tree.command(name="lock", description="قفل الروم الحالي لمنع الأعضاء من الكتابة")
+
+@bot.tree.command(name="untimeout", description="إزالة التايم أوت عن عضو")
+@app_commands.checks.has_permissions(moderate_members=True)
+@app_commands.checks.bot_has_permissions(moderate_members=True)
+async def untimeout(interaction: discord.Interaction, member: discord.Member):
+    await member.timeout(None)
+    await interaction.response.send_message(f"تم فك التايم أوت عن {member.mention}.")
+
+
+@bot.tree.command(name="lock", description="قفل الروم الحالي")
 @app_commands.checks.has_permissions(manage_channels=True)
+@app_commands.checks.bot_has_permissions(manage_channels=True)
 async def lock(interaction: discord.Interaction):
-    await interaction.channel.set_permissions(interaction.guild.default_role, send_messages=False)
-    await interaction.response.send_message("🔒 تم قفل هذه الروم بنجاح.")
+    channel = interaction.channel
+    if not isinstance(channel, discord.TextChannel):
+        await interaction.response.send_message("هذا الأمر للرومات النصية فقط.", ephemeral=True)
+        return
+    overwrite = channel.overwrites_for(interaction.guild.default_role)
+    overwrite.send_messages = False
+    await channel.set_permissions(interaction.guild.default_role, overwrite=overwrite)
+    await interaction.response.send_message("تم قفل الروم.")
 
-@bot.tree.command(name="unlock", description="فتح الروم الحالي للسماح بالكتابة")
+
+@bot.tree.command(name="unlock", description="فتح الروم الحالي")
 @app_commands.checks.has_permissions(manage_channels=True)
+@app_commands.checks.bot_has_permissions(manage_channels=True)
 async def unlock(interaction: discord.Interaction):
-    await interaction.channel.set_permissions(interaction.guild.default_role, send_messages=True)
-    await interaction.response.send_message("🔓 تم فتح هذه الروم بنجاح.")
+    channel = interaction.channel
+    if not isinstance(channel, discord.TextChannel):
+        await interaction.response.send_message("هذا الأمر للرومات النصية فقط.", ephemeral=True)
+        return
+    overwrite = channel.overwrites_for(interaction.guild.default_role)
+    overwrite.send_messages = True
+    await channel.set_permissions(interaction.guild.default_role, overwrite=overwrite)
+    await interaction.response.send_message("تم فتح الروم.")
 
-# --- 2. أوامر المعلومات والخدمات (Utility & Info) ---
 
-@bot.tree.command(name="ping", description="معرفة سرعة استجابة البوت (البنج)")
+@bot.tree.command(name="slowmode", description="تعيين الوضع البطيء بالثواني (0 للإلغاء)")
+@app_commands.describe(seconds="0 إلى 21600")
+@app_commands.checks.has_permissions(manage_channels=True)
+@app_commands.checks.bot_has_permissions(manage_channels=True)
+async def slowmode(interaction: discord.Interaction, seconds: app_commands.Range[int, 0, 21600]):
+    if not isinstance(interaction.channel, discord.TextChannel):
+        await interaction.response.send_message("هذا الأمر للرومات النصية فقط.", ephemeral=True)
+        return
+    await interaction.channel.edit(slowmode_delay=seconds)
+    if seconds == 0:
+        await interaction.response.send_message("تم إلغاء الوضع البطيء.")
+    else:
+        await interaction.response.send_message(f"الوضع البطيء الآن **{seconds}** ثانية.")
+
+
+@bot.tree.command(name="say", description="يرسل البوت رسالة في الروم (للإدارة)")
+@app_commands.describe(message="النص")
+@app_commands.checks.has_permissions(manage_messages=True)
+async def say(interaction: discord.Interaction, message: str):
+    if not is_text_channel(interaction.channel):
+        await interaction.response.send_message("هذا الأمر للشات النصي فقط.", ephemeral=True)
+        return
+    await interaction.response.send_message("تم الإرسال.", ephemeral=True)
+    await interaction.channel.send(message[:2000])
+
+
+@bot.tree.command(name="ping", description="سرعة استجابة البوت")
 async def ping(interaction: discord.Interaction):
     latency = round(bot.latency * 1000)
-    await interaction.response.send_message(f"🏓 بونق! سرعة الاستجابة الحالية هي: `{latency}ms`")
+    await interaction.response.send_message(f"السرعة: `{latency}ms`")
 
-@bot.tree.command(name="userinfo", description="عرض معلومات مفصلة عنك أو عن عضو آخر")
-async def userinfo(interaction: discord.Interaction, member: discord.Member = None):
-    member = member or interaction.user
-    embed = discord.Embed(title=f"معلومات المستخدم: {member.display_name}", color=discord.Color.blue())
-    embed.set_thumbnail(url=member.display_avatar.url)
-    embed.add_field(name="الاسم", value=member.name, inline=True)
-    embed.add_field(name="الآيدي (ID)", value=member.id, inline=True)
-    embed.add_field(name="تاريخ الانضمام للسيرفر", value=member.joined_at.strftime("%Y-%m-%d"), inline=False)
-    embed.add_field(name="تاريخ إنشاء الحساب", value=member.created_at.strftime("%Y-%m-%d"), inline=False)
+
+@bot.tree.command(name="userinfo", description="معلومات عنك أو عن عضو آخر")
+async def userinfo(interaction: discord.Interaction, member: discord.Member | None = None):
+    target = member or interaction.user
+    embed = discord.Embed(title=f"معلومات: {target.display_name}", color=discord.Color.blue())
+    embed.set_thumbnail(url=target.display_avatar.url)
+    embed.add_field(name="الاسم", value=str(target), inline=True)
+    embed.add_field(name="الآيدي", value=str(target.id), inline=True)
+    if isinstance(target, discord.Member) and target.joined_at:
+        embed.add_field(
+            name="انضم للسيرفر",
+            value=discord.utils.format_dt(target.joined_at, "D"),
+            inline=False,
+        )
+    embed.add_field(
+        name="إنشاء الحساب",
+        value=discord.utils.format_dt(target.created_at, "D"),
+        inline=False,
+    )
     await interaction.response.send_message(embed=embed)
 
-@bot.tree.command(name="serverinfo", description="عرض إحصائيات ومعلومات السيرفر")
+
+@bot.tree.command(name="serverinfo", description="معلومات السيرفر")
 async def serverinfo(interaction: discord.Interaction):
     guild = interaction.guild
-    embed = discord.Embed(title=f"معلومات سيرفر {guild.name}", color=discord.Color.green())
+    if guild is None:
+        await interaction.response.send_message("هذا الأمر للسيرفرات فقط.", ephemeral=True)
+        return
+
+    owner = guild.owner.mention if guild.owner else f"`{guild.owner_id}`"
+    embed = discord.Embed(title=f"سيرفر {guild.name}", color=discord.Color.green())
     if guild.icon:
         embed.set_thumbnail(url=guild.icon.url)
-    embed.add_field(name="صاحب السيرفر", value=guild.owner.mention, inline=True)
-    embed.add_field(name="عدد الأعضاء", value=guild.member_count, inline=True)
-    embed.add_field(name="تاريخ الإنشاء", value=guild.created_at.strftime("%Y-%m-%d"), inline=False)
-    embed.add_field(name="عدد الرومات", value=len(guild.channels), inline=True)
-    embed.add_field(name="عدد الرتب", value=len(guild.roles), inline=True)
+    embed.add_field(name="المالك", value=owner, inline=True)
+    embed.add_field(name="الأعضاء", value=str(guild.member_count), inline=True)
+    embed.add_field(name="الإنشاء", value=discord.utils.format_dt(guild.created_at, "D"), inline=False)
+    embed.add_field(name="الرومات", value=str(len(guild.channels)), inline=True)
+    embed.add_field(name="الرتب", value=str(len(guild.roles)), inline=True)
     await interaction.response.send_message(embed=embed)
 
-@bot.tree.command(name="avatar", description="تكبير وعرض الصورة الشخصية لعضو")
-async def avatar(interaction: discord.Interaction, member: discord.Member = None):
-    member = member or interaction.user
-    embed = discord.Embed(title=f"الصورة الشخصية لـ {member.display_name}", color=discord.Color.purple())
-    embed.set_image(url=member.display_avatar.url)
+
+@bot.tree.command(name="avatar", description="عرض الصورة الشخصية")
+async def avatar(interaction: discord.Interaction, member: discord.Member | None = None):
+    target = member or interaction.user
+    embed = discord.Embed(title=f"أفاتار {target.display_name}", color=discord.Color.purple())
+    embed.set_image(url=target.display_avatar.url)
     await interaction.response.send_message(embed=embed)
 
-# ==========================================
-# تشغيل النظامين معاً (الكود الأصلي)
-# ==========================================
+
 if __name__ == "__main__":
-    t = Thread(target=run_web)
-    t.start()
-    bot.run(os.environ['DISCORD_TOKEN'])
+    token = os.environ.get("DISCORD_TOKEN")
+    if not token:
+        raise SystemExit("DISCORD_TOKEN غير موجود. أضفه في متغيرات Render أو البيئة المحلية.")
+
+    web_thread = Thread(target=run_web, daemon=True)
+    web_thread.start()
+    bot.run(token)
